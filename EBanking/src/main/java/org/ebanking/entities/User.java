@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -29,6 +30,8 @@ public class User implements Serializable{
 	private String email;
 	private String username;
 	private String password;
+	@ManyToOne
+	private Role role;
 	
 	public User() {
 		super();
@@ -118,6 +121,14 @@ public class User implements Serializable{
 
 	public void setCin(String cin) {
 		this.cin = cin;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	
 	
