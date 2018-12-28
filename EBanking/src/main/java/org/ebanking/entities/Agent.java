@@ -26,10 +26,10 @@ public class Agent extends User implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public Agent(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin, Agence agence, Admin admin) {
-		super(nom, prenom, adresse, telephone, email, username, password, cin);
+			String password, String cin, boolean activated, Agence agence, Admin admin) {
+		super(nom, prenom, adresse, telephone, email, username, password, cin, activated);
 		this.agence = agence;
 		this.admin = admin;
 	}

@@ -31,8 +31,8 @@ public class Client extends User implements Serializable{
 	}
 
 	public Client(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin, int codePostal, Agent agent) {
-		super(nom, prenom, adresse, telephone, email, username, password, cin);
+			String password, String cin, boolean activated, int codePostal, Agent agent) {
+		super(nom, prenom, adresse, telephone, email, username, password, cin, activated);
 		this.codePostal = codePostal;
 		this.agent = agent;
 	}

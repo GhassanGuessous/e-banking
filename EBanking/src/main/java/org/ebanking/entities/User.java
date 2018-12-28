@@ -30,6 +30,7 @@ public class User implements Serializable{
 	private String email;
 	private String username;
 	private String password;
+	private boolean activated;
 	@ManyToOne
 	private Role role;
 	
@@ -39,7 +40,7 @@ public class User implements Serializable{
 	}
 
 	public User(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin) {
+			String password, String cin, boolean activated) {
 		super();
 		this.cin = cin;
 		this.nom = nom;
@@ -49,6 +50,7 @@ public class User implements Serializable{
 		this.email = email;
 		this.username = username;
 		this.password = password;
+		this.activated = activated;
 	}
 
 	public int getId() {
@@ -129,6 +131,14 @@ public class User implements Serializable{
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
 	}
 	
 	
