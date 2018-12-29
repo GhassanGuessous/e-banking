@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,23 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class TypeCompte implements Serializable {
+public class CategorieService implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
-	@OneToMany(mappedBy = "type")
-	private List<Compte> comptes;
+	@OneToMany(mappedBy = "categorie")
+	private List<SousCategorieService> sousCategorie;
 	
-	public TypeCompte() {
+	public CategorieService() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public TypeCompte(String description) {
+	public CategorieService(String description, List<SousCategorieService> sousCategorie) {
 		super();
 		this.description = description;
+		this.sousCategorie = sousCategorie;
 	}
 
 	public int getId() {
@@ -45,13 +46,14 @@ public class TypeCompte implements Serializable {
 		this.description = description;
 	}
 
-	public List<Compte> getComptes() {
-		return comptes;
+	public List<SousCategorieService> getSousCategorie() {
+		return sousCategorie;
 	}
 
-	public void setComptes(List<Compte> comptes) {
-		this.comptes = comptes;
+	public void setSousCategorie(List<SousCategorieService> sousCategorie) {
+		this.sousCategorie = sousCategorie;
 	}
+	
 	
 	
 }

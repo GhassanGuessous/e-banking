@@ -1,8 +1,10 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -124,7 +126,7 @@ public class User implements Serializable{
 	public void setCin(String cin) {
 		this.cin = cin;
 	}
-
+	
 	public Role getRole() {
 		return role;
 	}

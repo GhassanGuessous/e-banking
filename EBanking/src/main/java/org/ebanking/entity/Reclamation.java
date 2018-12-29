@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 
@@ -9,32 +9,29 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Don implements Serializable{
+public class Reclamation implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private double montant;
-	@ManyToOne
-	private Organisme organisme;
+	private String corps;
+	private String etat;
 	@ManyToOne
 	private Client client;
+	@ManyToOne
+	private Agent agent;
 	
-	public Don() {
+	public Reclamation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-	public Don(double montant, Organisme organisme, Client client) {
+	
+	public Reclamation(String corps, String etat, Client client, Agent agent) {
 		super();
-		this.montant = montant;
-		this.organisme = organisme;
+		this.corps = corps;
+		this.etat = etat;
 		this.client = client;
+		this.agent = agent;
 	}
 
 	public int getId() {
@@ -45,20 +42,12 @@ public class Don implements Serializable{
 		this.id = id;
 	}
 
-	public double getMontant() {
-		return montant;
+	public String getCorps() {
+		return corps;
 	}
 
-	public void setMontant(double montant) {
-		this.montant = montant;
-	}
-
-	public Organisme getOrganisme() {
-		return organisme;
-	}
-
-	public void setOrganisme(Organisme organisme) {
-		this.organisme = organisme;
+	public void setCorps(String corps) {
+		this.corps = corps;
 	}
 
 	public Client getClient() {
@@ -68,6 +57,22 @@ public class Don implements Serializable{
 	public void setClient(Client client) {
 		this.client = client;
 	}
-	
 
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+	public String getEtat() {
+		return etat;
+	}
+
+	public void setEtat(String etat) {
+		this.etat = etat;
+	}
+	
+	
 }
