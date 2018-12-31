@@ -11,8 +11,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User implements Serializable{
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User implements Serializable{
 
 	/**
 	 * 

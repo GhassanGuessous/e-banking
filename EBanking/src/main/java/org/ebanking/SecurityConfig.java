@@ -21,12 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		// from database
 		auth.jdbcAuthentication()
-		.dataSource(dataSource)
-		.passwordEncoder(NoOpPasswordEncoder.getInstance())
-		.usersByUsernameQuery("select username as principal, password as credentials, true from agent where username = ?")
-		.authoritiesByUsernameQuery("select a.username as principal, r.role from agent a join role r on a.role_role = r.role where a.username = ?")
-		.rolePrefix("ROLE_");
-		
+				.dataSource(dataSource)
+				.passwordEncoder(NoOpPasswordEncoder.getInstance())
+
+				.usersByUsernameQuery("select username as principal, password as credentials, true from user where username = ?")
+				.authoritiesByUsernameQuery("select a.username as principal, r.role from user a join role r on a.role_role = r.role where a.username = ?")
+				.rolePrefix("ROLE_");
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Client extends User implements Serializable{
+public class Client extends UserMapping implements Serializable{
 
 	/**
 	 * 

@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Admin extends User implements Serializable {
+public class Admin extends UserMapping implements Serializable {
 
 	@OneToMany(mappedBy = "admin")
 	private List<Agence> agences;

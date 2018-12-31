@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Agent extends User implements Serializable {
+public class Agent extends UserMapping implements Serializable {
 
 	@OneToOne
 	private Agence agence;

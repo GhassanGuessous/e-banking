@@ -8,13 +8,23 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ebanking.dao.AgentRepository;
+import org.ebanking.dao.ClientRepository;
+import org.ebanking.entities.Agent;
+import org.ebanking.entities.Client;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Secured(value = {"ROLE_AGENT"})
 public class AgentController {
+
+	@Autowired
+	private ClientRepository clientRepository;
 
 	/**
 	 * return the connected user and his authorities
@@ -37,4 +47,20 @@ public class AgentController {
 		
 		return params;
 	}
+
+	/**
+	 *
+	 */
+	@RequestMapping(value = "/addClient")
+	public Client addClient(Client client){
+		return clientRepository.save(client);
+	}
+
+	@RequestMapping(value = "/getAllClients")
+	public List<Client> getAllClients(){
+		return clientRepository.findAll();
+	}
+
+
+
 }
