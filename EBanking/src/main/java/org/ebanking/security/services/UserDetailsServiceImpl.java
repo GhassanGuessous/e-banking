@@ -23,13 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Client client = clientRepository.findByUsername(username);
-		System.out.println("1 ------> " + client);
 		if(client == null) throw new UsernameNotFoundException("Bad Credentials " + username);
 		
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(client.getRole().getRole()));
-		System.out.println("2 ------>" + client.getUsername() + ", " + client.getPassword() + ", ");
-		authorities.forEach(r -> System.out.println(r.getAuthority()));
+		System.out.println("------> Username: " + client.getUsername() + ", pass: " + client.getPassword() + ", Auth: " + authorities);
 		return new User(client.getUsername(), client.getPassword(), authorities);
 	}
 
