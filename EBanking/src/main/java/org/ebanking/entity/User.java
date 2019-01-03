@@ -1,10 +1,8 @@
 package org.ebanking.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,8 +11,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User implements Serializable{
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User implements Serializable{
 
 	/**
 	 * 
@@ -126,7 +124,7 @@ public class User implements Serializable{
 	public void setCin(String cin) {
 		this.cin = cin;
 	}
-	
+
 	public Role getRole() {
 		return role;
 	}

@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Don implements Serializable{
 
@@ -21,8 +23,10 @@ public class Don implements Serializable{
 	private int id;
 	private double montant;
 	@ManyToOne
+	@JsonManagedReference
 	private Organisme organisme;
 	@ManyToOne
+	@JsonManagedReference
 	private Client client;
 	
 	public Don() {

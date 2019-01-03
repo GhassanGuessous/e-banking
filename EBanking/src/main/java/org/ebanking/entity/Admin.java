@@ -6,12 +6,16 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-public class Admin extends User implements Serializable {
+public class Admin extends UserMapping implements Serializable {
 
 	@OneToMany(mappedBy = "admin")
+	@JsonBackReference
 	private List<Agence> agences;
 	@OneToMany(mappedBy = "admin")
+	@JsonBackReference
 	private List<Agent> agents;
 	
 	public Admin() {

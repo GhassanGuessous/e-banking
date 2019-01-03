@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class TypeCompte implements Serializable {
 
@@ -17,6 +19,7 @@ public class TypeCompte implements Serializable {
 	private int id;
 	private String description;
 	@OneToMany(mappedBy = "type")
+	@JsonBackReference
 	private List<Compte> comptes;
 	
 	public TypeCompte() {

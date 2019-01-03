@@ -11,6 +11,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Compte implements Serializable {
 
@@ -19,17 +22,23 @@ public class Compte implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreation;
 	@ManyToOne
+	@JsonManagedReference
 	private TypeCompte type;
 	private double sold;
 	@ManyToOne
+	@JsonManagedReference
 	private Client client;
 	@ManyToOne
+	@JsonManagedReference
 	private Agent agent;
 	@OneToMany(mappedBy = "compteSource")
+	@JsonBackReference
 	private List<Virement> virementsEnvoyes;
 	@OneToMany(mappedBy = "compteDestination")
+	@JsonBackReference
 	private List<Virement> virementsRecus;
 	@OneToMany(mappedBy = "compte")
+	@JsonBackReference
 	private List<PaiementService> paiementServices;
 	
 	public Compte() {

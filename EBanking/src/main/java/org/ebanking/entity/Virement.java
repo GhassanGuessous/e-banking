@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Virement implements Serializable {
 
@@ -18,8 +20,10 @@ public class Virement implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
+	@JsonManagedReference
 	private Compte compteSource;
 	@ManyToOne
+	@JsonManagedReference
 	private Compte compteDestination;
 	private double montant;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -76,6 +80,12 @@ public class Virement implements Serializable {
 
 	public void setDateVirement(Date dateVirement) {
 		this.dateVirement = dateVirement;
+	}
+
+	@Override
+	public String toString() {
+		return "Virement [compteSource=" + compteSource + ", compteDestination=" + compteDestination + ", montant="
+				+ montant + ", dateVirement=" + dateVirement + "]";
 	}
 	
 	

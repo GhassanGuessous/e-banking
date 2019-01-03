@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class SousCategorieService implements Serializable {
 
@@ -18,8 +21,10 @@ public class SousCategorieService implements Serializable {
 	private int id;
 	private String description;
 	@ManyToOne
+	@JsonManagedReference
 	private CategorieService categorie;
 	@OneToMany(mappedBy = "sousCategorieService")
+	@JsonBackReference
 	private List<PaiementService> paiementServices;
 	
 	public SousCategorieService() {

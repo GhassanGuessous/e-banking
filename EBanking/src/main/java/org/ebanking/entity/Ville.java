@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.List;
 
 @Entity
@@ -18,6 +20,7 @@ public class Ville implements Serializable {
 	private int id;
 	private String nom;
 	@OneToMany(mappedBy = "ville")
+	@JsonBackReference
 	private List<Agence> agences;
 	
 	public Ville() {

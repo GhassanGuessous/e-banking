@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
-public class Client extends User implements Serializable{
+public class Client extends UserMapping implements Serializable{
 
 	/**
 	 * 
@@ -17,12 +20,16 @@ public class Client extends User implements Serializable{
 	
 	private int codePostal;
 	@ManyToOne
+	@JsonManagedReference
 	private Agent agent;
 	@OneToMany(mappedBy = "client")
+	@JsonBackReference
 	private List<Don> dons;
 	@OneToMany(mappedBy = "client")
+	@JsonBackReference
 	private List<Reclamation> reclamations;
 	@OneToMany(mappedBy = "client")
+	@JsonBackReference
 	private List<Compte> comptes;
 	
 	public Client() {

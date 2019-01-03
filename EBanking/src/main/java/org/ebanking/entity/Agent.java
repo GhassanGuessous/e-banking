@@ -8,18 +8,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
-public class Agent extends User implements Serializable {
+public class Agent extends UserMapping implements Serializable {
 
 	@OneToOne
 	private Agence agence;
 	@ManyToOne
+	@JsonManagedReference
 	private Admin admin;
 	@OneToMany(mappedBy = "agent")
+	@JsonBackReference
 	private List<Client> clients;
 	@OneToMany(mappedBy = "agent")
+	@JsonBackReference
 	private List<Reclamation> reclamations;
 	@OneToMany(mappedBy = "agent")
+	@JsonBackReference
 	private List<Compte> comptes;
 	
 	public Agent() {
