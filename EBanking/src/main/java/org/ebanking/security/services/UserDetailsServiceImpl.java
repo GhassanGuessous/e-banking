@@ -25,6 +25,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private AdminRepository adminRepository;
 	
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		Collection<GrantedAuthority> authorities = new ArrayList<>();
+//		
+//		Client client = clientRepository.findByUsername(username);
+//		Admin admin = adminRepository.findByUsername(username);
+//		
+//		if(client == null && admin == null)
+//			throw new UsernameNotFoundException("Bad Credentials " + username);
+//		
+//		if(admin != null) {
+//			authorities.add(new SimpleGrantedAuthority(admin.getRole().getRole()));
+//			System.out.println("------> Username: " + admin.getUsername() + ", pass: " + admin.getPassword() + ", Auth: " + authorities);
+//			return new User(admin.getUsername(), admin.getPassword(), authorities);
+//		}else {
+//			authorities.add(new SimpleGrantedAuthority(client.getRole().getRole()));
+//			System.out.println("------> Username: " + client.getUsername() + ", pass: " + client.getPassword() + ", Auth: " + authorities);
+//			return new User(client.getUsername(), client.getPassword(), authorities);
+//		}
+//	}
+
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -37,13 +59,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		if(admin != null) {
 			authorities.add(new SimpleGrantedAuthority(admin.getRole().getRole()));
-			System.out.println("------> Username: " + admin.getUsername() + ", pass: " + admin.getPassword() + ", Auth: " + authorities);
+			System.out.println("------>Admin Username: " + admin.getUsername() + ", pass: " + admin.getPassword() + ", Auth: " + authorities);
 			return new User(admin.getUsername(), admin.getPassword(), authorities);
 		}else {
 			authorities.add(new SimpleGrantedAuthority(client.getRole().getRole()));
-			System.out.println("------> Username: " + client.getUsername() + ", pass: " + client.getPassword() + ", Auth: " + authorities);
+			System.out.println("------> Client Username: " + client.getUsername() + ", pass: " + client.getPassword() + ", Auth: " + authorities);
 			return new User(client.getUsername(), client.getPassword(), authorities);
 		}
 	}
 
+	
 }

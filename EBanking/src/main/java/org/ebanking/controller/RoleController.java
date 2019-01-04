@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@Secured(value = {"ROLE_ADMIN"})
+//@Secured(value = {"ROLE_ADMIN"})
 public class RoleController {
 
     @Autowired

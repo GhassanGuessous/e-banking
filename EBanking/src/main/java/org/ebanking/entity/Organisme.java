@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Organisme implements Serializable{
@@ -25,7 +26,7 @@ public class Organisme implements Serializable{
 	private String nom;
 	private Long rib;
 	@OneToMany(mappedBy = "organisme")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Don> dons;
 	
 	public Organisme() {

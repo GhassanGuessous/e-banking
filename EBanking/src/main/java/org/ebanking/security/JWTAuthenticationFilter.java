@@ -27,7 +27,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	private AuthenticationManager authenticationManager;
 
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
-		super();
+		super();	
 		this.authenticationManager = authenticationManager;
 	}
 	
@@ -35,9 +35,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 
-		Client client = null;
+		
+		Client client  = null;
 		try {
-			client = new ObjectMapper().readValue(request.getInputStream(), Client.class);
+			client = new ObjectMapper().readValue(request.getInputStream(), org.ebanking.entity.Client.class);
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw new RuntimeException(e);
@@ -53,7 +54,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-
+		
 		User springUser = (User) authResult.getPrincipal();
 		String jwtToken = Jwts.builder()
 				.setSubject(springUser.getUsername())

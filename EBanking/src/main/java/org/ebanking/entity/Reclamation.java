@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -19,10 +20,10 @@ public class Reclamation implements Serializable {
 	private String corps;
 	private String etat;
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Client client;
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Agent agent;
 	
 	public Reclamation() {

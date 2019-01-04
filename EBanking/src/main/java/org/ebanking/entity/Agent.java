@@ -19,16 +19,16 @@ public class Agent extends UserMapping implements Serializable {
 	@OneToOne
 	private Agence agence;
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Admin admin;
 	@OneToMany(mappedBy = "agent")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Client> clients;
 	@OneToMany(mappedBy = "agent")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Reclamation> reclamations;
 	@OneToMany(mappedBy = "agent")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Compte> comptes;
 	
 	public Agent() {
@@ -36,9 +36,9 @@ public class Agent extends UserMapping implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Agent(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin, boolean activated, Agence agence, Admin admin) {
-		super(nom, prenom, adresse, telephone, email, username, password, cin, activated);
+	public Agent(String nom, String prenom, String adresse, String telephone, String email, String username,
+			String password, String cin, boolean activated, Agence agence, Admin admin , Role role) {
+		super(nom, prenom, adresse, telephone, email, username, password, cin, activated , role);
 		this.agence = agence;
 		this.admin = admin;
 	}

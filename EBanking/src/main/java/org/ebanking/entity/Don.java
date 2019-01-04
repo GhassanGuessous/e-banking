@@ -23,10 +23,10 @@ public class Don implements Serializable{
 	private int id;
 	private double montant;
 	@ManyToOne
-	@JsonManagedReference
+    @JsonManagedReference
 	private Organisme organisme;
 	@ManyToOne
-	@JsonManagedReference
+    @JsonManagedReference
 	private Client client;
 	
 	public Don() {

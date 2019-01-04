@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -24,10 +25,10 @@ public class Agence implements Serializable {
 	private String nom;
 	private String adresse;
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference
 	private Ville ville;
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Admin admin;
 	
 	public Agence() {

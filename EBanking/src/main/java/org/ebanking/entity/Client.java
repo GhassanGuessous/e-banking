@@ -20,16 +20,16 @@ public class Client extends UserMapping implements Serializable{
 	
 	private int codePostal;
 	@ManyToOne
-	@JsonManagedReference
+	@JsonBackReference
 	private Agent agent;
 	@OneToMany(mappedBy = "client")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Don> dons;
 	@OneToMany(mappedBy = "client")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Reclamation> reclamations;
 	@OneToMany(mappedBy = "client")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Compte> comptes;
 	
 	public Client() {
@@ -37,9 +37,9 @@ public class Client extends UserMapping implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Client(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin, boolean activated, int codePostal, Agent agent) {
-		super(nom, prenom, adresse, telephone, email, username, password, cin, activated);
+	public Client(String nom, String prenom, String adresse, String telephone, String email, String username,
+			String password, String cin, boolean activated, int codePostal, Agent agent , Role role) {
+		super(nom, prenom, adresse, telephone, email, username, password, cin, activated,role);
 		this.codePostal = codePostal;
 		this.agent = agent;
 	}

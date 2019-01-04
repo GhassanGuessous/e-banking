@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class Ville implements Serializable {
 	private int id;
 	private String nom;
 	@OneToMany(mappedBy = "ville")
-	@JsonBackReference
+    @JsonManagedReference
 	private List<Agence> agences;
 	
 	public Ville() {
