@@ -24,11 +24,13 @@ public class PaiementService implements Serializable {
 	private Long numeroContrat;
 	private Long numeroTelephone;
 	private double montant;
+
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="sousPaiement")
 	private SousCategorieService sousCategorieService;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="comptePaiement")
 	private Compte compte;
 	
 	public PaiementService() {

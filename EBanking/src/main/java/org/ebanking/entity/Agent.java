@@ -18,17 +18,21 @@ public class Agent extends UserMapping implements Serializable {
 
 	@OneToOne
 	private Agence agence;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="adminAgent")
 	private Admin admin;
+	
 	@OneToMany(mappedBy = "agent")
-    @JsonManagedReference
+    @JsonManagedReference(value="agentClient")
 	private List<Client> clients;
+	
 	@OneToMany(mappedBy = "agent")
-    @JsonManagedReference
+    @JsonManagedReference(value="agentReclamation")
 	private List<Reclamation> reclamations;
+	
 	@OneToMany(mappedBy = "agent")
-    @JsonManagedReference
+    @JsonManagedReference(value="agentCompte")
 	private List<Compte> comptes;
 	
 	public Agent() {

@@ -25,8 +25,9 @@ public class Organisme implements Serializable{
 	private int id;
 	private String nom;
 	private Long rib;
+	
 	@OneToMany(mappedBy = "organisme")
-    @JsonManagedReference
+    @JsonManagedReference(value="organismeDon")
 	private List<Don> dons;
 	
 	public Organisme() {

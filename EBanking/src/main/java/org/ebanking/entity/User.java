@@ -33,8 +33,9 @@ public abstract class User implements Serializable{
 	private String username;
 	private String password;
 	private boolean activated;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="roleUser")
 	private Role role;
 	
 	public User() {

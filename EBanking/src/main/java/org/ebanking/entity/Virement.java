@@ -20,12 +20,15 @@ public class Virement implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="compteVirementS")
 	private Compte compteSource;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="compteVirementD")
 	private Compte compteDestination;
+	
 	private double montant;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateVirement;

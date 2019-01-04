@@ -21,24 +21,31 @@ public class Compte implements Serializable {
 	private Long rib;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreation;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="typeCompte")
 	private TypeCompte type;
+	
 	private double sold;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="clientCompte")
 	private Client client;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="agentCompte")
 	private Agent agent;
+	
 	@OneToMany(mappedBy = "compteSource")
-	@JsonBackReference
+    @JsonManagedReference(value="compteVirementS")
 	private List<Virement> virementsEnvoyes;
+	
 	@OneToMany(mappedBy = "compteDestination")
-    @JsonManagedReference
+    @JsonManagedReference(value="compteVirementD")
 	private List<Virement> virementsRecus;
+	
 	@OneToMany(mappedBy = "compte")
-    @JsonManagedReference
+    @JsonManagedReference(value="comptePaiement")
 	private List<PaiementService> paiementServices;
 	
 	public Compte() {

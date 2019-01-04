@@ -7,16 +7,19 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class Admin extends UserMapping implements Serializable {
 
 	@OneToMany(mappedBy = "admin")
-    @JsonManagedReference
+	@JsonManagedReference(value="adminAgence")
 	private List<Agence> agences;
+	
 	@OneToMany(mappedBy = "admin")
-    @JsonManagedReference
+	@JsonManagedReference(value="adminAgent")
 	private List<Agent> agents;
 	
 	public Admin() {

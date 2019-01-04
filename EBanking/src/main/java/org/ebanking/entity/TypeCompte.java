@@ -19,8 +19,9 @@ public class TypeCompte implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
+
 	@OneToMany(mappedBy = "type")
-    @JsonManagedReference
+    @JsonManagedReference(value="typeCompte")
 	private List<Compte> comptes;
 	
 	public TypeCompte() {

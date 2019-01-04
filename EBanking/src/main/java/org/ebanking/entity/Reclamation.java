@@ -19,11 +19,13 @@ public class Reclamation implements Serializable {
 	private int id;
 	private String corps;
 	private String etat;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="clientReclamation")
 	private Client client;
+	
 	@ManyToOne
-	@JsonBackReference
+    @JsonBackReference(value="agentReclamation")
 	private Agent agent;
 	
 	public Reclamation() {

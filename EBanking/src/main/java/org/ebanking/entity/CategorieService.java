@@ -19,8 +19,9 @@ public class CategorieService implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
+	
 	@OneToMany(mappedBy = "categorie")
-    @JsonManagedReference
+    @JsonManagedReference(value="catSous")
 	private List<SousCategorieService> sousCategorie;
 	
 	public CategorieService() {
