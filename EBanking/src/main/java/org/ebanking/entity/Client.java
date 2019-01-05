@@ -24,9 +24,6 @@ public class Client extends UserMapping implements Serializable{
 	private Agent agent;
 	@OneToMany(mappedBy = "client")
 	@JsonBackReference
-	private List<Don> dons;
-	@OneToMany(mappedBy = "client")
-	@JsonBackReference
 	private List<Reclamation> reclamations;
 	@OneToMany(mappedBy = "client")
 	@JsonBackReference
@@ -58,14 +55,6 @@ public class Client extends UserMapping implements Serializable{
 
 	public void setAgent(Agent agent) {
 		this.agent = agent;
-	}
-
-	public List<Don> getDons() {
-		return dons;
-	}
-
-	public void setDons(List<Don> dons) {
-		this.dons = dons;
 	}
 
 	public List<Reclamation> getReclamations() {

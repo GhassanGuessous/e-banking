@@ -40,6 +40,9 @@ public class Compte implements Serializable {
 	@OneToMany(mappedBy = "compte")
 	@JsonBackReference
 	private List<PaiementService> paiementServices;
+	@OneToMany(mappedBy = "compte")
+	@JsonBackReference
+	private List<Don> dons;
 	
 	public Compte() {
 		super();
@@ -126,6 +129,14 @@ public class Compte implements Serializable {
 
 	public void setPaiementServices(List<PaiementService> paiementServices) {
 		this.paiementServices = paiementServices;
+	}
+
+	public List<Don> getDons() {
+		return dons;
+	}
+
+	public void setDons(List<Don> dons) {
+		this.dons = dons;
 	}
 	
 	

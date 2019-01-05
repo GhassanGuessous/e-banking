@@ -27,18 +27,18 @@ public class Don implements Serializable{
 	private Organisme organisme;
 	@ManyToOne
 	@JsonManagedReference
-	private Client client;
+	private Compte compte;
 	
 	public Don() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Don(double montant, Organisme organisme, Client client) {
+	public Don(double montant, Organisme organisme, Compte compte) {
 		super();
 		this.montant = montant;
 		this.organisme = organisme;
-		this.client = client;
+		this.compte = compte;
 	}
 
 	public int getId() {
@@ -65,13 +65,14 @@ public class Don implements Serializable{
 		this.organisme = organisme;
 	}
 
-	public Client getClient() {
-		return client;
+	public Compte getCompte() {
+		return compte;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+	public void setCompte(Compte compte) {
+		this.compte = compte;
 	}
+	
 	
 
 }
