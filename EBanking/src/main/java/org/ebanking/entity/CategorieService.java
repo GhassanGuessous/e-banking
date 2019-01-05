@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class CategorieService implements Serializable {
@@ -18,8 +19,9 @@ public class CategorieService implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
+	
 	@OneToMany(mappedBy = "categorie")
-	@JsonBackReference
+    @JsonManagedReference(value="catSous")
 	private List<SousCategorieService> sousCategorie;
 	
 	public CategorieService() {

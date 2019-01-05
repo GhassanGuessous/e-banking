@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -23,11 +24,13 @@ public class PaiementService implements Serializable {
 	private Long numeroContrat;
 	private Long numeroTelephone;
 	private double montant;
+
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference(value="sousPaiement")
 	private SousCategorieService sousCategorieService;
+	
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference(value="comptePaiement")
 	private Compte compte;
 	
 	public PaiementService() {

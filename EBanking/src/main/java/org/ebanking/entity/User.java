@@ -10,6 +10,8 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User implements Serializable{
@@ -26,12 +28,14 @@ public abstract class User implements Serializable{
 	private String nom;
 	private String prenom;
 	private String adresse;
-	private Long telephone;
+	private String telephone;
 	private String email;
 	private String username;
 	private String password;
 	private boolean activated;
+	
 	@ManyToOne
+    @JsonBackReference(value="roleUser")
 	private Role role;
 	
 	public User() {
@@ -39,8 +43,8 @@ public abstract class User implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(String nom, String prenom, String adresse, Long telephone, String email, String username,
-			String password, String cin, boolean activated) {
+	public User(String nom, String prenom, String adresse, String telephone, String email, String username,
+			String password, String cin, boolean activated , Role role) {
 		super();
 		this.cin = cin;
 		this.nom = nom;
@@ -51,6 +55,7 @@ public abstract class User implements Serializable{
 		this.username = username;
 		this.password = password;
 		this.activated = activated;
+		this.role=role;
 	}
 
 	public int getId() {
@@ -85,11 +90,11 @@ public abstract class User implements Serializable{
 		this.adresse = adresse;
 	}
 
-	public Long getTelephone() {
+	public String getTelephone() {
 		return telephone;
 	}
 
-	public void setTelephone(Long telephone) {
+	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
 

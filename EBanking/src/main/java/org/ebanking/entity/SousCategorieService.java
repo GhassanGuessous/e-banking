@@ -21,10 +21,11 @@ public class SousCategorieService implements Serializable {
 	private int id;
 	private String description;
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference(value="catSous")
 	private CategorieService categorie;
+	
 	@OneToMany(mappedBy = "sousCategorieService")
-	@JsonBackReference
+    @JsonManagedReference(value="sousPaiement")
 	private List<PaiementService> paiementServices;
 	
 	public SousCategorieService() {

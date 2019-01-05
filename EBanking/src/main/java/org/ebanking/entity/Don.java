@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -22,11 +23,13 @@ public class Don implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private double montant;
+
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference(value="organismeDon")
 	private Organisme organisme;
+	
 	@ManyToOne
-	@JsonManagedReference
+    @JsonBackReference(value="compteDon")
 	private Compte compte;
 	
 	public Don() {
