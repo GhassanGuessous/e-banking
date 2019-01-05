@@ -47,8 +47,9 @@ public class Compte implements Serializable {
 	@OneToMany(mappedBy = "compte")
     @JsonManagedReference(value="comptePaiement")
 	private List<PaiementService> paiementServices;
+	
 	@OneToMany(mappedBy = "compte")
-	@JsonBackReference
+	@JsonBackReference(value = "compteDon")
 	private List<Don> dons;
 	
 	public Compte() {

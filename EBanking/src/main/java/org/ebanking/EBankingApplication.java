@@ -23,26 +23,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootApplication
 public class EBankingApplication  implements CommandLineRunner{
 
-	 @Autowired
-	    private AdminRepository adminRepository;	
-	 
-	 @Autowired
-	    private ClientRepository clientRepository;	
-	 
-	 @Autowired
-	 	private AgentRepository AgentRepository;
-	 
-	 @Autowired
-	 	private AgenceRepository agenceRepository;
-
-	 @Autowired
-	 	private VilleRepository VilleRepository;
-	 
-	 @Autowired
-	 	private RoleRepository rolerep;
-	 
-	 @Autowired
-	 	private PasswordEncoder passwordEncod;
+//	 @Autowired
+//	    private AdminRepository adminRepository;	
+//	 
+//	 @Autowired
+//	    private ClientRepository clientRepository;	
+//	 
+//	 @Autowired
+//	 	private AgentRepository AgentRepository;
+//	 
+//	 @Autowired
+//	 	private AgenceRepository agenceRepository;
+//
+//	 @Autowired
+//	 	private VilleRepository VilleRepository;
+//	 
+//	 @Autowired
+//	 	private RoleRepository rolerep;
+//	 
+//	 @Autowired
+//	 	private PasswordEncoder passwordEncod;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(EBankingApplication.class, args);
@@ -107,10 +107,10 @@ public class EBankingApplication  implements CommandLineRunner{
 		
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 }
 

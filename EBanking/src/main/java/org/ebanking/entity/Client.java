@@ -19,14 +19,17 @@ public class Client extends UserMapping implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private int codePostal;
+	
 	@ManyToOne
     @JsonBackReference(value="agentClient")
 	private Agent agent;
+	
 	@OneToMany(mappedBy = "client")
 	@JsonBackReference
 	private List<Reclamation> reclamations;
+	
 	@OneToMany(mappedBy = "client")
-	@JsonBackReference
+	@JsonBackReference(value = "clientCompte")
 	private List<Compte> comptes;
 	
 	public Client() {
