@@ -37,7 +37,6 @@ public class Agent extends UserMapping implements Serializable {
 	
 	public Agent() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Agent(String nom, String prenom, String adresse, String telephone, String email, String username,

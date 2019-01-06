@@ -37,7 +37,6 @@ public class Agence implements Serializable {
 	
 	public Agence() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Agence(String nom, String adresse, Ville ville, Admin admin) {

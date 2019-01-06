@@ -11,14 +11,13 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User implements Serializable{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -40,7 +39,6 @@ public abstract class User implements Serializable{
 	
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public User(String nom, String prenom, String adresse, String telephone, String email, String username,
@@ -114,10 +112,12 @@ public abstract class User implements Serializable{
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
 
+	@JsonSetter
 	public void setPassword(String password) {
 		this.password = password;
 	}
