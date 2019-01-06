@@ -56,10 +56,14 @@ public class AdminController {
     @RequestMapping(value = "/addNewAgent", method = RequestMethod.POST)
     public Agent addAgent(@RequestBody @Valid AgentInput agentInput){
 
-        Role agentRole = roleRepository.getOne("ROLE_AGENT");
-        System.out.println("FOUND :: " + agentRole);
-        Agence agentAgence = agenceRepository.getOne(agentInput.getAgence());
-        Admin agentAdmin = adminRepository.getOne(agentInput.getAdmin());
+        Role agentRole = roleRepository.findRoleByRole("ROLE_AGENT");
+        System.out.println("ROLE-FOUND :: " + agentRole.toString());
+
+        Agence agentAgence = agenceRepository.findAgenceById(agentInput.getAgence());
+        System.out.println("AGENCE-FOUND : " + agentAgence);
+
+        Admin agentAdmin = adminRepository.findAdminById(agentInput.getAdmin());
+        System.out.println("ADMIN-FOUND : " + agentAdmin);
 
         return agentRepository.save(new Agent(
                 agentInput.getNom(),

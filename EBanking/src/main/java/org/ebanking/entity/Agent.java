@@ -85,13 +85,15 @@ public class Agent extends UserMapping implements Serializable {
 	public void setComptes(List<Compte> comptes) {
 		this.comptes = comptes;
 	}
-	
-	
 
-	
-
-	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "Agent{" +
+				"agence=" + agence +
+				", admin=" + admin +
+				", clients=" + clients +
+				", reclamations=" + reclamations +
+				", comptes=" + comptes +
+				'}';
+	}
 }

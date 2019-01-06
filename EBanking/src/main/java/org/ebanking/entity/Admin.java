@@ -50,10 +50,11 @@ public class Admin extends UserMapping implements Serializable {
 	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
 	}
-	
-	
 
-	
-
-	
+	@Override
+	public String toString() {
+		return "Admin{" +
+				super.toString() +
+				'}';
+	}
 }

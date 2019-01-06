@@ -1,9 +1,6 @@
 package org.ebanking.web.inputs;
 
 import lombok.*;
-import org.ebanking.entity.Admin;
-import org.ebanking.entity.Agence;
-import org.ebanking.entity.Role;
 
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
@@ -11,9 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 @EqualsAndHashCode
 @Getter
 public class AgentInput {

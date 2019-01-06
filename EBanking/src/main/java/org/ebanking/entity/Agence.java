@@ -86,6 +86,13 @@ public class Agence implements Serializable {
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Agence{" +
+				"id=" + id +
+				", nom='" + nom + '\'' +
+				", adresse='" + adresse +
+				'}';
+	}
 }

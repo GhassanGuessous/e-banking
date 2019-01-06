@@ -145,8 +145,20 @@ public abstract class User implements Serializable{
 	public void setActivated(boolean activated) {
 		this.activated = activated;
 	}
-	
-	
-	
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", cin='" + cin + '\'' +
+				", nom='" + nom + '\'' +
+				", prenom='" + prenom + '\'' +
+				", adresse='" + adresse + '\'' +
+				", telephone='" + telephone + '\'' +
+				", email='" + email + '\'' +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", activated=" + activated +
+				'}';
+	}
 }
