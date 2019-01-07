@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,25 +9,29 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
-public class CategorieService implements Serializable {
+public class TypeCompte implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
-	@OneToMany(mappedBy = "categorie")
-	private List<SousCategorieService> sousCategorie;
+
+	@OneToMany(mappedBy = "type")
+    @JsonManagedReference(value="typeCompte")
+	private List<Compte> comptes;
 	
-	public CategorieService() {
+	public TypeCompte() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public CategorieService(String description, List<SousCategorieService> sousCategorie) {
+	public TypeCompte(String description) {
 		super();
 		this.description = description;
-		this.sousCategorie = sousCategorie;
 	}
 
 	public int getId() {
@@ -46,14 +50,13 @@ public class CategorieService implements Serializable {
 		this.description = description;
 	}
 
-	public List<SousCategorieService> getSousCategorie() {
-		return sousCategorie;
+	public List<Compte> getComptes() {
+		return comptes;
 	}
 
-	public void setSousCategorie(List<SousCategorieService> sousCategorie) {
-		this.sousCategorie = sousCategorie;
+	public void setComptes(List<Compte> comptes) {
+		this.comptes = comptes;
 	}
-	
 	
 	
 }

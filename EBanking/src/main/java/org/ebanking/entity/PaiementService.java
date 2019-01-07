@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 
@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class PaiementService implements Serializable {
@@ -21,9 +24,13 @@ public class PaiementService implements Serializable {
 	private Long numeroContrat;
 	private Long numeroTelephone;
 	private double montant;
+
 	@ManyToOne
+    @JsonBackReference(value="sousPaiement")
 	private SousCategorieService sousCategorieService;
+	
 	@ManyToOne
+    @JsonBackReference(value="comptePaiement")
 	private Compte compte;
 	
 	public PaiementService() {

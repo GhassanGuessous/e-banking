@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,6 +11,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Compte implements Serializable {
 
@@ -18,19 +21,36 @@ public class Compte implements Serializable {
 	private Long rib;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreation;
+	
 	@ManyToOne
+    @JsonBackReference(value="typeCompte")
 	private TypeCompte type;
+	
 	private double sold;
+	
 	@ManyToOne
+    @JsonBackReference(value="clientCompte")
 	private Client client;
+	
 	@ManyToOne
+    @JsonBackReference(value="agentCompte")
 	private Agent agent;
+	
 	@OneToMany(mappedBy = "compteSource")
+    @JsonManagedReference(value="compteVirementS")
 	private List<Virement> virementsEnvoyes;
+	
 	@OneToMany(mappedBy = "compteDestination")
+    @JsonManagedReference(value="compteVirementD")
 	private List<Virement> virementsRecus;
+	
 	@OneToMany(mappedBy = "compte")
+    @JsonManagedReference(value="comptePaiement")
 	private List<PaiementService> paiementServices;
+	
+	@OneToMany(mappedBy = "compte")
+	@JsonBackReference(value = "compteDon")
+	private List<Don> dons;
 	
 	public Compte() {
 		super();
@@ -117,6 +137,14 @@ public class Compte implements Serializable {
 
 	public void setPaiementServices(List<PaiementService> paiementServices) {
 		this.paiementServices = paiementServices;
+	}
+
+	public List<Don> getDons() {
+		return dons;
+	}
+
+	public void setDons(List<Don> dons) {
+		this.dons = dons;
 	}
 	
 	

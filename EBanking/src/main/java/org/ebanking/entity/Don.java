@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 
@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Don implements Serializable{
@@ -20,21 +23,25 @@ public class Don implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private double montant;
+
 	@ManyToOne
+    @JsonBackReference(value="organismeDon")
 	private Organisme organisme;
+	
 	@ManyToOne
-	private Client client;
+    @JsonBackReference(value="compteDon")
+	private Compte compte;
 	
 	public Don() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Don(double montant, Organisme organisme, Client client) {
+	public Don(double montant, Organisme organisme, Compte compte) {
 		super();
 		this.montant = montant;
 		this.organisme = organisme;
-		this.client = client;
+		this.compte = compte;
 	}
 
 	public int getId() {
@@ -61,13 +68,14 @@ public class Don implements Serializable{
 		this.organisme = organisme;
 	}
 
-	public Client getClient() {
-		return client;
+	public Compte getCompte() {
+		return compte;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+	public void setCompte(Compte compte) {
+		this.compte = compte;
 	}
+	
 	
 
 }

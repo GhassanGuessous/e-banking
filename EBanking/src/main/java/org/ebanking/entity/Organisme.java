@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Organisme implements Serializable{
@@ -22,7 +25,9 @@ public class Organisme implements Serializable{
 	private int id;
 	private String nom;
 	private Long rib;
+	
 	@OneToMany(mappedBy = "organisme")
+    @JsonManagedReference(value="organismeDon")
 	private List<Don> dons;
 	
 	public Organisme() {

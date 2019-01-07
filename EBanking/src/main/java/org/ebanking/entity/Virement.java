@@ -1,4 +1,4 @@
-package org.ebanking.entities;
+package org.ebanking.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,16 +11,24 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Virement implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
 	@ManyToOne
+    @JsonBackReference(value="compteVirementS")
 	private Compte compteSource;
+	
 	@ManyToOne
+    @JsonBackReference(value="compteVirementD")
 	private Compte compteDestination;
+	
 	private double montant;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateVirement;
@@ -76,6 +84,12 @@ public class Virement implements Serializable {
 
 	public void setDateVirement(Date dateVirement) {
 		this.dateVirement = dateVirement;
+	}
+
+	@Override
+	public String toString() {
+		return "Virement [compteSource=" + compteSource + ", compteDestination=" + compteDestination + ", montant="
+				+ montant + ", dateVirement=" + dateVirement + "]";
 	}
 	
 	
