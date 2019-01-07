@@ -21,8 +21,8 @@ public class AgenceInput {
     private String adresse;
 
     @NotNull(message = "VILLE is a required field")
-    private Integer idVille;
+    private Integer ville;
 
     @NotNull(message = "ADMIN is a required field")
-    private Integer idAdmin;
+    private Integer admin;
 }

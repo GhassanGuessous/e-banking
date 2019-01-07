@@ -139,8 +139,8 @@ public class AdminController {
         return agenceRepository.save(new Agence(
                 agenceInput.getNom(),
                 agenceInput.getAdresse(),
-                villeRepository.findVilleById(agenceInput.getIdVille()),
-                adminRepository.findAdminById(agenceInput.getIdAdmin())
+                villeRepository.findVilleById(agenceInput.getVille()),
+                adminRepository.findAdminById(agenceInput.getAdmin())
         ));
     }
 
@@ -158,8 +158,8 @@ public class AdminController {
         if (oldAgence != null) {
             oldAgence.setNom(newAgenceInput.getNom());
             oldAgence.setAdresse(newAgenceInput.getAdresse());
-            oldAgence.setVille(villeRepository.findVilleById(newAgenceInput.getIdVille()));
-            oldAgence.setAdmin(adminRepository.findAdminById(newAgenceInput.getIdAdmin()));
+            oldAgence.setVille(villeRepository.findVilleById(newAgenceInput.getVille()));
+            oldAgence.setAdmin(adminRepository.findAdminById(newAgenceInput.getAdmin()));
 
             return agenceRepository.save(oldAgence);
         }
@@ -167,8 +167,7 @@ public class AdminController {
         else
             throw new RuntimeException("No Agence found with id(" + id + ") !");
     }
-
-
+    
     /**
      *
      * @param id

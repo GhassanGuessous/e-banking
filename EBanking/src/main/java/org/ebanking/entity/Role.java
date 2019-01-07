@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.ebanking.entity;
 
 import java.io.Serializable;
