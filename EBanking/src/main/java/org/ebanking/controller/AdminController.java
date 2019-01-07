@@ -11,10 +11,7 @@ import org.ebanking.entity.Role;
 import org.ebanking.web.inputs.AgentInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -37,33 +34,11 @@ public class AdminController {
 
     /**
      *
-     */
-    @RequestMapping(value = "/addAdmin")
-    public Admin addAdmin(Admin admin){
-        return adminRepository.save(admin);
-    }
-
-    @RequestMapping(value = "/getAllAdmins")
-    public List<Admin> getAll(){
-        return adminRepository.findAll();
-    }
-
-    /**
-     *	Admin admin , Role role)
      * @param agentInput
      * @return
      */
     @RequestMapping(value = "/addNewAgent", method = RequestMethod.POST)
     public Agent addAgent(@RequestBody @Valid AgentInput agentInput){
-
-        Role agentRole = roleRepository.findRoleByRole("ROLE_AGENT");
-        System.out.println("ROLE-FOUND :: " + agentRole.toString());
-
-        Agence agentAgence = agenceRepository.findAgenceById(agentInput.getAgence());
-        System.out.println("AGENCE-FOUND : " + agentAgence);
-
-        Admin agentAdmin = adminRepository.findAdminById(agentInput.getAdmin());
-        System.out.println("ADMIN-FOUND : " + agentAdmin);
 
         return agentRepository.save(new Agent(
                 agentInput.getNom(),
@@ -75,13 +50,68 @@ public class AdminController {
                 passwordEncoder.encode(agentInput.getPassword()),
                 agentInput.getCin(),
                 agentInput.isActivated(),
-                agentAgence,
-                agentAdmin,
-                agentRole
+                agenceRepository.findAgenceById(agentInput.getAgence()),
+                adminRepository.findAdminById(agentInput.getAdmin()),
+                roleRepository.findRoleByRole("ROLE_AGENT")
         ));
     }
 
-    @RequestMapping(value = "/getAllAgents")
+    /**
+     *
+     * @param id
+     * @param newAgentInput
+     * @return
+     */
+    @RequestMapping(value = "/updateAgent/{id}", method = RequestMethod.POST)
+    public Agent updateAgent(@PathVariable int id, @RequestBody @Valid AgentInput newAgentInput){
+
+        Agent oldAgent = agentRepository.findAgentById(id);
+
+        if (oldAgent != null) {
+            oldAgent.setNom(newAgentInput.getNom());
+            oldAgent.setPrenom(newAgentInput.getPrenom());
+            oldAgent.setAdresse(newAgentInput.getAdresse());
+            oldAgent.setTelephone(newAgentInput.getTelephone());
+            oldAgent.setEmail(newAgentInput.getEmail());
+            oldAgent.setUsername(newAgentInput.getUsername());
+            oldAgent.setPassword(passwordEncoder.encode(newAgentInput.getPassword()));
+            oldAgent.setCin(newAgentInput.getCin());
+            oldAgent.setActivated(newAgentInput.isActivated());
+            oldAgent.setAgence(agenceRepository.findAgenceById(newAgentInput.getAgence()));
+            oldAgent.setAdmin(adminRepository.findAdminById(newAgentInput.getAdmin()));
+            oldAgent.setRole(roleRepository.findRoleByRole("ROLE_AGENT"));
+
+            return agentRepository.save(oldAgent);
+        }
+
+        else
+            throw new RuntimeException("No Agent found with id(" + id + ") !");
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/deleteAgent/{id}", method = RequestMethod.POST)
+    public Agent deleteAgent(@PathVariable int id){
+
+        Agent agent = agentRepository.findAgentById(id);
+
+        if (agent != null)
+             agentRepository.delete(agent);
+        else
+            throw new RuntimeException("No Agent found with id(" + id + ") !");
+
+        return null;
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getAgents", method = RequestMethod.GET)
     public List<Agent> getAllAgents(){
         return agentRepository.findAll();
     }
