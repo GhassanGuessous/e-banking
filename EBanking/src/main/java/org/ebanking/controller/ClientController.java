@@ -58,34 +58,33 @@ public class ClientController {
 	 * @return
 	 * @throws ParseException
 	 */
-	@RequestMapping(value = "/virement", method = RequestMethod.GET)
-	public Object[] virement(@RequestParam(value = "ribSource") Long ribSource,
-			@RequestParam(name = "ribDestination") Long ribDestination,
-			@RequestParam(name = "montant") Double montant) throws ParseException {
+	@RequestMapping(value = "/éffectuer-un-virement", method = RequestMethod.POST)
+	public Object[] virement(@RequestBody Virement virement) throws ParseException {
 		
-		Compte compteSource = compteRepository.findByRib(ribSource);
-		Compte compteDestination = compteRepository.findByRib(ribDestination);
+		Compte compteSource = compteRepository.findByRib(virement.getCompteSource().getRib());
+		Compte compteDestination = compteRepository.findByRib(virement.getCompteDestination().getRib());
 		
-		System.out.println(ribSource + ", " + ribDestination + ", " + montant);
+		System.out.println(virement.getCompteSource().getRib() + ", "
+				+ virement.getCompteDestination().getRib() + ", " + virement.getMontant());
 		
 		if(compteSource == null || compteDestination == null) {
 			//l'un des rib est eroné
 			return new Object[] {-1, null};
 		}else {
-			if(compteSource.getSold() >= montant) {
-				compteSource.setSold(compteSource.getSold() - montant);
-				compteDestination.setSold(compteDestination.getSold() + montant);
+			if(compteSource.getSold() >= virement.getMontant()) {
+				compteSource.setSold(compteSource.getSold() - virement.getMontant());
+				compteDestination.setSold(compteDestination.getSold() + virement.getMontant());
 				
 				compteRepository.save(compteSource);
 				compteRepository.save(compteDestination);
 				
 				DateFormat df = new SimpleDateFormat(datePattern);
 				Virement v = new Virement(compteSource, compteDestination, 
-						montant, df.parse(df.format(Calendar.getInstance().getTime())));
+						virement.getMontant(), df.parse(df.format(Calendar.getInstance().getTime())));
 				virementRepository.save(v);
 				
 				//transaction effectuée avec success 
-				return new Object[] {1, compteSource};
+				return new Object[] {1, v};
 			}
 			//solde insuffisant
 			return new Object[] {-2, null};
@@ -206,6 +205,16 @@ public class ClientController {
 	/**
 	 * --------------------------Services payés------------------------
 	 */
+	
+	/**
+	 * 
+	 * @param paiementService
+	 * @return
+	 */
+	@RequestMapping("/payer-un-service")
+	public Object[] payerService(@RequestBody PaiementService paiementService) {
+		return new Object[] {};
+	}
 	
 	/**
 	 * 
