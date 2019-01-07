@@ -2,7 +2,6 @@ package org.ebanking.web.inputs;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -34,12 +33,10 @@ public class AgentInput {
 
     @NotNull(message = "EMAIL is a required field")
     @Email
-    @Column(unique = true)
     private String email;
 
     @NotNull(message = "USERNAME is a required field")
     @Size(min=5, message = "USERNAME cannot be less than 10 characters")
-    @Column(unique = true)
     private String username;
 
     @NotNull(message = "PASSWORD is a required field")

@@ -39,21 +39,24 @@ public class AdminController {
      */
     @RequestMapping(value = "/addNewAgent", method = RequestMethod.POST)
     public Agent addAgent(@RequestBody @Valid AgentInput agentInput){
-
-        return agentRepository.save(new Agent(
-                agentInput.getNom(),
-                agentInput.getPrenom(),
-                agentInput.getAdresse(),
-                agentInput.getTelephone(),
-                agentInput.getEmail(),
-                agentInput.getUsername(),
-                passwordEncoder.encode(agentInput.getPassword()),
-                agentInput.getCin(),
-                agentInput.isActivated(),
-                agenceRepository.findAgenceById(agentInput.getAgence()),
-                adminRepository.findAdminById(agentInput.getAdmin()),
-                roleRepository.findRoleByRole("ROLE_AGENT")
-        ));
+        try {
+            return agentRepository.save(new Agent(
+                    agentInput.getNom(),
+                    agentInput.getPrenom(),
+                    agentInput.getAdresse(),
+                    agentInput.getTelephone(),
+                    agentInput.getEmail(),
+                    agentInput.getUsername(),
+                    passwordEncoder.encode(agentInput.getPassword()),
+                    agentInput.getCin(),
+                    agentInput.isActivated(),
+                    agenceRepository.findAgenceById(agentInput.getAgence()),
+                    adminRepository.findAdminById(agentInput.getAdmin()),
+                    roleRepository.findRoleByRole("ROLE_AGENT")
+            ));
+        }catch (Exception e) {
+            throw new RuntimeException("Valeur en double détectée pour les champs EMAIL ou USERNAME !");
+        }
     }
 
     /**
@@ -81,7 +84,9 @@ public class AdminController {
             oldAgent.setAdmin(adminRepository.findAdminById(newAgentInput.getAdmin()));
             oldAgent.setRole(roleRepository.findRoleByRole("ROLE_AGENT"));
 
-            return agentRepository.save(oldAgent);
+            try {
+                return agentRepository.save(oldAgent);
+            }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour les champs EMAIL ou USERNAME !"); }
         }
 
         else
@@ -135,13 +140,16 @@ public class AdminController {
      */
     @RequestMapping(value = "/addNewAgence", method = RequestMethod.POST)
     public Agence addAgence(@RequestBody @Valid AgenceInput agenceInput){
-
-        return agenceRepository.save(new Agence(
-                agenceInput.getNom(),
-                agenceInput.getAdresse(),
-                villeRepository.findVilleById(agenceInput.getVille()),
-                adminRepository.findAdminById(agenceInput.getAdmin())
-        ));
+        try{
+            return agenceRepository.save(new Agence(
+                    agenceInput.getNom(),
+                    agenceInput.getAdresse(),
+                    villeRepository.findVilleById(agenceInput.getVille()),
+                    adminRepository.findAdminById(agenceInput.getAdmin())
+            ));
+        }catch (Exception e) {
+            throw new RuntimeException("Valeur en double détectée pour le libelle d'agence (NOM)!");
+        }
     }
 
     /**
@@ -161,13 +169,15 @@ public class AdminController {
             oldAgence.setVille(villeRepository.findVilleById(newAgenceInput.getVille()));
             oldAgence.setAdmin(adminRepository.findAdminById(newAgenceInput.getAdmin()));
 
-            return agenceRepository.save(oldAgence);
+            try{
+                return agenceRepository.save(oldAgence);
+            }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle d'agence (NOM)!"); }
         }
 
         else
             throw new RuntimeException("No Agence found with id(" + id + ") !");
     }
-    
+
     /**
      *
      * @param id
