@@ -15,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
@@ -53,6 +54,11 @@ public class AgentController {
 	@RequestMapping(value = "/addClient")
 	public Client addClient(Client client){
 		return clientRepository.save(client);
+	}
+	
+	@RequestMapping(value = "/tst",method=RequestMethod.POST)
+	public List<Client> tst(){
+		return clientRepository.findAll();
 	}
 
 	@RequestMapping(value = "/getAllClients")
