@@ -20,6 +20,7 @@ public class SousCategorieService implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String description;
+	
 	@ManyToOne
     @JsonBackReference(value="catSous")
 	private CategorieService categorie;

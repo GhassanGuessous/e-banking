@@ -8,9 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class Client extends UserMapping implements Serializable{
@@ -21,20 +19,17 @@ public class Client extends UserMapping implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private int codePostal;
+	
 	@ManyToOne
     @JsonBackReference(value="agentClient")
 	private Agent agent;
 	
 	@OneToMany(mappedBy = "client")
-    @JsonManagedReference(value="clientDon")
-	private List<Don> dons;
-	
-	@OneToMany(mappedBy = "client")
-    @JsonManagedReference(value="clientReclamation")
+	@JsonBackReference
 	private List<Reclamation> reclamations;
 	
 	@OneToMany(mappedBy = "client")
-    @JsonManagedReference(value="clientCompte")
+	@JsonBackReference(value = "clientCompte")
 	private List<Compte> comptes;
 	
 	public Client() {
@@ -43,8 +38,8 @@ public class Client extends UserMapping implements Serializable{
 	}
 
 	public Client(String nom, String prenom, String adresse, String telephone, String email, String username,
-			String password, String cin, boolean activated, int codePostal, Agent agent , Role role) {
-		super(nom, prenom, adresse, telephone, email, username, password, cin, activated,role);
+			String password, String cin, boolean activated, Role role, int codePostal, Agent agent) {
+		super(nom, prenom, adresse, telephone, email, username, password, cin, activated, role);
 		this.codePostal = codePostal;
 		this.agent = agent;
 	}
@@ -63,14 +58,6 @@ public class Client extends UserMapping implements Serializable{
 
 	public void setAgent(Agent agent) {
 		this.agent = agent;
-	}
-
-	public List<Don> getDons() {
-		return dons;
-	}
-
-	public void setDons(List<Don> dons) {
-		this.dons = dons;
 	}
 
 	public List<Reclamation> getReclamations() {

@@ -48,6 +48,10 @@ public class Compte implements Serializable {
     @JsonManagedReference(value="comptePaiement")
 	private List<PaiementService> paiementServices;
 	
+	@OneToMany(mappedBy = "compte")
+	@JsonBackReference(value = "compteDon")
+	private List<Don> dons;
+	
 	public Compte() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -133,6 +137,14 @@ public class Compte implements Serializable {
 
 	public void setPaiementServices(List<PaiementService> paiementServices) {
 		this.paiementServices = paiementServices;
+	}
+
+	public List<Don> getDons() {
+		return dons;
+	}
+
+	public void setDons(List<Don> dons) {
+		this.dons = dons;
 	}
 	
 	
