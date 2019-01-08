@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 			.antMatchers("/login/**").permitAll()
 			.antMatchers("/Admin/**").hasAuthority("ROLE_ADMIN")
-			.antMatchers(HttpMethod.POST, "/Agent/**").hasAuthority("ROLE_AGENT")
+			.antMatchers("/Agent/**").hasAuthority("ROLE_AGENT")
 			.anyRequest().authenticated()
 		.and()
 			.addFilter(new JWTAuthenticationFilter(authenticationManager()))
