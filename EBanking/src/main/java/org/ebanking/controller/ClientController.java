@@ -8,15 +8,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.ebanking.dao.ClientRepository;
 import org.ebanking.dao.CompteRepository;
 import org.ebanking.dao.DonRepository;
+import org.ebanking.dao.OrganismeRepository;
 import org.ebanking.dao.ReclamationRepository;
 import org.ebanking.dao.VirementRepository;
+import org.ebanking.entity.Agent;
+import org.ebanking.entity.Client;
 import org.ebanking.entity.Compte;
 import org.ebanking.entity.Don;
+import org.ebanking.entity.Organisme;
 import org.ebanking.entity.PaiementService;
 import org.ebanking.entity.Reclamation;
 import org.ebanking.entity.Virement;
+import org.ebanking.web.inputs.DonInput;
+import org.ebanking.web.inputs.ReclamationInput;
+import org.ebanking.web.inputs.VirementInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +55,12 @@ public class ClientController {
 	
 	@Autowired
 	private DonRepository donRepository;
+	
+	@Autowired
+	private ClientRepository clientRepository;
+	
+	@Autowired
+	private OrganismeRepository organismeRepository; 
 
 	/**
 	 * -------------Virements---------------
@@ -59,13 +75,10 @@ public class ClientController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/éffectuer-un-virement", method = RequestMethod.POST)
-	public Object[] virement(@RequestBody Virement virement) throws ParseException {
+	public Object[] virement(@RequestBody @Valid VirementInput virement) throws ParseException {
 		
-		Compte compteSource = compteRepository.findByRib(virement.getCompteSource().getRib());
-		Compte compteDestination = compteRepository.findByRib(virement.getCompteDestination().getRib());
-		
-		System.out.println(virement.getCompteSource().getRib() + ", "
-				+ virement.getCompteDestination().getRib() + ", " + virement.getMontant());
+		Compte compteSource = compteRepository.findByRib(virement.getRibSource());
+		Compte compteDestination = compteRepository.findByRib(virement.getRibDestination());
 		
 		if(compteSource == null || compteDestination == null) {
 			//l'un des rib est eroné
@@ -145,14 +158,25 @@ public class ClientController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/déposer-une-réclamation", method = RequestMethod.POST)
-	public Object[] deposerReclamation(@RequestBody Reclamation reclamation) throws ParseException {
+	public Object[] deposerReclamation(@RequestBody ReclamationInput reclamationInput) throws ParseException {
 		DateFormat df = new SimpleDateFormat(datePattern);
-		// setting the client & the agent
-		// to do
-		reclamation.setDateDepot(df.parse(df.format(Calendar.getInstance().getTime())));
-		reclamationRepository.save(reclamation);
 		
-		return new Object[] {1, reclamation};
+		Client client = clientRepository.findById(reclamationInput.getClient());
+		
+		if(client != null) {
+			Reclamation reclamation = new Reclamation();
+			reclamation.setCorps(reclamationInput.getCorps());
+			reclamation.setClient(client);
+			reclamation.setAgent(client.getAgent());
+			reclamation.setEtat("En cours de traitement");
+			reclamation.setDateDepot(df.parse(df.format(Calendar.getInstance().getTime())));
+			
+			reclamationRepository.save(reclamation);
+			
+			return new Object[] {1, reclamation};
+		}
+		
+		return new Object[] {-1, null};
 	}
 	
 	/**
@@ -170,17 +194,24 @@ public class ClientController {
 	 */
 	
 	@RequestMapping(value = "/faire-un-don", method = RequestMethod.POST)
-	public Object[] fairUnDon(@RequestBody Don don) {
-		Compte compte = compteRepository.findByRib(don.getCompte().getRib());
+	public Object[] fairUnDon(@RequestBody DonInput donInput) {
+		Compte compte = compteRepository.findByRib(donInput.getCompte());
+		Organisme organisme = organismeRepository.findById(donInput.getOrganisme());
 		
-		if(compte.getSold() >= don.getMontant()) {
-			compte.setSold(compte.getSold() - don.getMontant());
-			compteRepository.save(compte);
-			
-			donRepository.save(don);
-			
-			return new Object[] {1, don};
+		if(compte != null) {
+			if(compte.getSold() >= donInput.getMontant()) {
+				Don don = new Don(donInput.getMontant(), organisme, compte);
+				compte.setSold(compte.getSold() - donInput.getMontant());
+				
+				donRepository.save(don);
+				compteRepository.save(compte);
+				
+				return new Object[] {1, don};
+			}
+			//solde insuffisant
+			return new Object[] {-2, null};
 		}
+		//compte introuvable
 		return new Object[] {-1, null};
 		
 	}
