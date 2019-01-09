@@ -158,7 +158,7 @@ public class ClientController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/déposer-une-réclamation", method = RequestMethod.POST)
-	public Object[] deposerReclamation(@RequestBody ReclamationInput reclamationInput) throws ParseException {
+	public Object[] deposerReclamation(@RequestBody @Valid ReclamationInput reclamationInput) throws ParseException {
 		DateFormat df = new SimpleDateFormat(datePattern);
 		
 		Client client = clientRepository.findById(reclamationInput.getClient());
@@ -194,7 +194,7 @@ public class ClientController {
 	 */
 	
 	@RequestMapping(value = "/faire-un-don", method = RequestMethod.POST)
-	public Object[] fairUnDon(@RequestBody DonInput donInput) {
+	public Object[] fairUnDon(@RequestBody @Valid DonInput donInput) {
 		Compte compte = compteRepository.findByRib(donInput.getCompte());
 		Organisme organisme = organismeRepository.findById(donInput.getOrganisme());
 		
