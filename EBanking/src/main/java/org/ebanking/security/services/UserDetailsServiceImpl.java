@@ -27,9 +27,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private AdminRepository adminRepository;
 
+
 	@Autowired
 	private AgentRepository agentRepository;
-
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -42,6 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if(client == null && admin == null && agent==null)
 			throw new UsernameNotFoundException("Bad Credentials " + username);
 		
+
 		if(admin != null) {
 			authorities.add(new SimpleGrantedAuthority(admin.getRole().getRole()));
 			System.out.println("------>Admin Username: " + admin.getUsername() + ", pass: " + admin.getPassword() + ", Auth: " + authorities);
@@ -53,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		else {
 			authorities.add(new SimpleGrantedAuthority(agent.getRole().getRole()));
-			System.out.println("------> Agent Username: " + agent.getUsername() + ", pass: " + agent.getPassword() + ", Auth: " + authorities);
+			System.out.println("------>Agent Username: " + agent.getUsername() + ", pass: " + agent.getPassword() + ", Auth: " + authorities);
 			return new User(agent.getUsername(), agent.getPassword(), authorities);
 		}
 	}

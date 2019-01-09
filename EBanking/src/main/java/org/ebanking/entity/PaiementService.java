@@ -33,19 +33,24 @@ public class PaiementService implements Serializable {
     @JsonBackReference(value="comptePaiement")
 	private Compte compte;
 	
+	@ManyToOne
+    @JsonBackReference(value="organismePaiement")
+	private Organisme organisme;
+	
 	public PaiementService() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public PaiementService(Long numeroContrat, Long numeroTelephone, double montant,
-			SousCategorieService sousCategorieService, Compte compte) {
+			SousCategorieService sousCategorieService, Compte compte, Organisme organisme) {
 		super();
 		this.numeroContrat = numeroContrat;
 		this.numeroTelephone = numeroTelephone;
 		this.montant = montant;
 		this.sousCategorieService = sousCategorieService;
 		this.compte = compte;
+		this.organisme = organisme;
 	}
 
 	public Long getNumeroContrat() {
@@ -78,6 +83,22 @@ public class PaiementService implements Serializable {
 
 	public void setSousCategorieService(SousCategorieService sousCategorieService) {
 		this.sousCategorieService = sousCategorieService;
+	}
+
+	public Organisme getOrganisme() {
+		return organisme;
+	}
+
+	public void setOrganisme(Organisme organisme) {
+		this.organisme = organisme;
+	}
+
+	public Compte getCompte() {
+		return compte;
+	}
+
+	public void setCompte(Compte compte) {
+		this.compte = compte;
 	}
 	
 	

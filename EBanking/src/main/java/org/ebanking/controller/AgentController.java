@@ -5,9 +5,15 @@ import java.util.List;
 import org.ebanking.dao.ClientRepository;
 import org.ebanking.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
@@ -43,8 +49,13 @@ public class AgentController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/addClient")
-	public Client addClient(Client client){
+	@RequestMapping(value = "/addClient",method=RequestMethod.POST)
+	public Client addClient( Client client){
+		return clientRepository.save(client);
+	}
+	
+	@RequestMapping(value = "/editClient",method=RequestMethod.POST)
+	public Client editClient(Client client){
 		return clientRepository.save(client);
 	}
 	
@@ -57,6 +68,44 @@ public class AgentController {
 	public List<Client> getAllClients(){
 		return clientRepository.findAll();
 	}
+	
+	@RequestMapping(value="/activateCompte")
+	public Client activateCompte(int id_client)
+	{
+		System.out.println("--------------------------.....---------- "+id_client);
+		Client client =clientRepository.findById(id_client);
+		client.setActivated(true);
+		clientRepository.save(client);
+		return client;
+	}
+	
+	@RequestMapping(value="/desacivateCompte")
+	public Client desactivateCompte(int id_client)
+	{
+		Client client =clientRepository.findById(id_client);
+		client.setActivated(false);
+		clientRepository.save(client);
+		return client;
+	}
+	
+	@RequestMapping(value="/getClient")
+	public Client getClientbyId(int id_client)
+	{
+		Client client =clientRepository.findById(id_client);
+		return client;
+		
+	}
+	
+	@RequestMapping(value="/deleteClient",method=RequestMethod.DELETE)
+	public void deleteClientbyId(int id_client)
+	{
+		clientRepository.deleteById(id_client);
+		
+	}
+	
+
+	
+	
 
 
 

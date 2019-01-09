@@ -9,26 +9,44 @@ import org.ebanking.entity.Agence;
 
 public class AddAgentDTO {
 
+
+	private String password;
+	
 	private int id;
 	@NotNull(message = "CIN is a required field")
 	@Size(min = 6, max = 10, message = "CIN cannot be less than 6 and not longer than 10 characters")
 	private String cin;
+	
 	@NotNull(message = "NOM is a required field")
-	@Size(min = 3, max = 50, message = "NOM cannot be less than 3 and not longer than 50 characters")
+	@Size(min = 3, max = 30, message = "NOM cannot be less than 3 and not longer than 50 characters")
 	private String nom;
+	
+	@NotNull(message = "PRENOM is a required field")
+	@Size(min = 3, max = 30, message = "PRENOM cannot be less than 3 and not longer than 50 characters")
 	private String prenom;
-	private String password;
+	
+	@NotNull(message = "ADRESSE is a required field")
+	@Size(min = 3, max = 50, message = "ADRESSE cannot be less than 3 and not longer than 50 characters")
 	private String adresse;
+	
+	@NotNull(message = "TELEPHONE is a required field")
+	@Size(min = 2, max = 50, message = "TELEPHONE cannot be less than 3 and not longer than 50 characters")
 	private String telephone;
+	
 	@NotNull(message = "EMAIL is a required field")
 	@Email
 	private String email;
+	
 	private String username;
+	@NotNull
 	private boolean activated;
 
 	private String agence;
 	private String admin;
 
+	
+	
+	
 	public String getAdmin() {
 		return admin;
 	}
