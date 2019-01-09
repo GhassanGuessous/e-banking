@@ -37,7 +37,6 @@ public class Agent extends UserMapping implements Serializable {
 	
 	public Agent() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Agent(String nom, String prenom, String adresse, String telephone, String email, String username,
@@ -86,13 +85,12 @@ public class Agent extends UserMapping implements Serializable {
 	public void setComptes(List<Compte> comptes) {
 		this.comptes = comptes;
 	}
-	
-	
 
-	
+	@Override
+	public String toString() {
+		return "Agent:nom"+super. getNom()+"[agence=" + agence + ", admin=" + admin + ", clients=" + clients + ", reclamations="
+				+ reclamations + ", comptes=" + comptes + "]";
+	}
 
-	
-	
-	
 	
 }

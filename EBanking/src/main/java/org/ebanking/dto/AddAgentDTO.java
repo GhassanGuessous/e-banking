@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import org.ebanking.entity.Admin;
 import org.ebanking.entity.Agence;
 
-public class AgentDTO {
+public class AddAgentDTO {
 
 	private int id;
 	@NotNull(message = "CIN is a required field")
@@ -17,6 +17,7 @@ public class AgentDTO {
 	@Size(min = 3, max = 50, message = "NOM cannot be less than 3 and not longer than 50 characters")
 	private String nom;
 	private String prenom;
+	private String password;
 	private String adresse;
 	private String telephone;
 	@NotNull(message = "EMAIL is a required field")
@@ -46,6 +47,15 @@ public class AgentDTO {
 
 	public String getCin() {
 		return cin;
+	}
+
+	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void setCin(String cin) {
@@ -116,13 +126,13 @@ public class AgentDTO {
 		this.agence = agence;
 	}
 
-	public AgentDTO() {
+	public AddAgentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public AgentDTO(int id, String cin, String nom, String prenom, String adresse, String telephone, String email,
-			String username, boolean activated) {
+	public AddAgentDTO(int id, String cin, String nom, String prenom, String adresse, String telephone, String email,
+			String username, boolean activated , String password) {
 		super();
 		this.id = id;
 		this.cin = cin;
@@ -133,6 +143,7 @@ public class AgentDTO {
 		this.email = email;
 		this.username = username;
 		this.activated = activated;
+		this.password=password;
 
 	}
 

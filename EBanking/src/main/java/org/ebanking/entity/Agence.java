@@ -2,18 +2,12 @@ package org.ebanking.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@Table(uniqueConstraints={@UniqueConstraint(columnNames={"nom"})})
 public class Agence implements Serializable {
 
 	/**
@@ -37,7 +31,6 @@ public class Agence implements Serializable {
 	
 	public Agence() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Agence(String nom, String adresse, Ville ville, Admin admin) {
@@ -87,6 +80,13 @@ public class Agence implements Serializable {
 	public void setAdmin(Admin admin) {
 		this.admin = admin;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "Agence{" +
+				"id=" + id +
+				", nom='" + nom + '\'' +
+				", adresse='" + adresse +
+				'}';
+	}
 }

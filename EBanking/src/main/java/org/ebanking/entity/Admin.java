@@ -7,10 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 public class Admin extends UserMapping implements Serializable {
@@ -25,7 +22,6 @@ public class Admin extends UserMapping implements Serializable {
 	
 	public Admin() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Admin(String nom, String prenom, String adresse, String telephone, String email, String username, String password, String cin, boolean activated,
@@ -51,10 +47,11 @@ public class Admin extends UserMapping implements Serializable {
 	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
 	}
-	
-	
 
-	
-
-	
+	@Override
+	public String toString() {
+		return "Admin{" +
+				super.toString() +
+				'}';
+	}
 }
