@@ -15,7 +15,9 @@ import org.ebanking.dao.ClientRepository;
 import org.ebanking.dao.CompteRepository;
 import org.ebanking.dao.DonRepository;
 import org.ebanking.dao.OrganismeRepository;
+import org.ebanking.dao.PaiementServiceRepository;
 import org.ebanking.dao.ReclamationRepository;
+import org.ebanking.dao.SousCategorieServiceRepository;
 import org.ebanking.dao.VirementRepository;
 import org.ebanking.entity.Agent;
 import org.ebanking.entity.Client;
@@ -24,10 +26,12 @@ import org.ebanking.entity.Don;
 import org.ebanking.entity.Organisme;
 import org.ebanking.entity.PaiementService;
 import org.ebanking.entity.Reclamation;
+import org.ebanking.entity.SousCategorieService;
 import org.ebanking.entity.Virement;
 import org.ebanking.security.JwtTokenUtil;
 import org.ebanking.security.SecurityConstants;
 import org.ebanking.web.inputs.DonInput;
+import org.ebanking.web.inputs.PaiementServiceInput;
 import org.ebanking.web.inputs.ReclamationInput;
 import org.ebanking.web.inputs.VirementInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +68,12 @@ public class ClientController {
 	
 	@Autowired
 	private OrganismeRepository organismeRepository;
+	
+	@Autowired
+	private PaiementServiceRepository paiementServiceRepository;
+	
+	@Autowired
+	private SousCategorieServiceRepository categorieServiceRepository;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil; 
@@ -174,10 +184,11 @@ public class ClientController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/déposer-une-réclamation", method = RequestMethod.POST)
-	public Object[] deposerReclamation(@RequestBody @Valid ReclamationInput reclamationInput) throws ParseException {
+	public Object[] deposerReclamation(HttpServletRequest request, @RequestBody @Valid ReclamationInput reclamationInput) throws ParseException {
 		DateFormat df = new SimpleDateFormat(datePattern);
 		
-		Client client = clientRepository.findById(reclamationInput.getClient());
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
 		
 		if(client != null) {
 			Reclamation reclamation = new Reclamation();
@@ -264,8 +275,36 @@ public class ClientController {
 	 * @return
 	 */
 	@RequestMapping("/payer-un-service")
-	public Object[] payerService(@RequestBody PaiementService paiementService) {
-		return new Object[] {};
+	public Object[] payerService(@RequestBody PaiementServiceInput paiementServiceInput) {
+		Compte compte = compteRepository.findByRib(paiementServiceInput.getCompte());
+		Organisme organisme = organismeRepository.findById(paiementServiceInput.getOrganisme());
+		SousCategorieService sousCategorieService = categorieServiceRepository.findById(paiementServiceInput.getSousCategorie());
+		
+		Long numeroContrat = ( paiementServiceInput.getNumeroContart() != null ) ? paiementServiceInput.getNumeroContart() : null;
+		Long numeroTelephone = ( paiementServiceInput.getNumeroTelephone() != null ) ? paiementServiceInput.getNumeroTelephone() : null;
+		
+		if(compte != null) {
+			if(compte.getSold() >= paiementServiceInput.getMontant()) {
+				PaiementService paiementService = new PaiementService(
+						numeroContrat, 
+						numeroTelephone,
+						paiementServiceInput.getMontant(),
+						sousCategorieService,
+						compte, 
+						organisme
+					);
+				compte.setSold(compte.getSold() - paiementServiceInput.getMontant());
+				
+				paiementServiceRepository.save(paiementService);
+				compteRepository.save(compte);
+				
+				return new Object[] {1, paiementService};
+			}
+			//solde insuffisant
+			return new Object[] {-2, null};
+		}
+		//compte introuvable
+		return new Object[] {-1, null};
 	}
 	
 	/**
