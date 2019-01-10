@@ -2,18 +2,17 @@ package org.ebanking.controller;
 
 import java.util.List;
 
+import org.ebanking.dao.AgentRepository;
 import org.ebanking.dao.ClientRepository;
+import org.ebanking.entity.Agent;
 import org.ebanking.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.web.bind.annotation.RequestAttribute;
-
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 @RestController()
 @RequestMapping(value = "/Agent")
@@ -22,7 +21,8 @@ public class AgentController {
 
 	@Autowired
 	private ClientRepository clientRepository;
-
+	@Autowired
+	private AgentRepository agentRepository;
 	/**
 	 * return the connected user and his authorities
 	 */
@@ -49,13 +49,24 @@ public class AgentController {
 	 *
 	 */
 	@RequestMapping(value = "/addClient",method=RequestMethod.POST)
-	public Client addClient( Client client){
+	public Client addClient(@RequestBody Client client){
+		Agent ag=agentRepository.findByUsername(client.getAgent().getUsername());
+		client.setAgent(ag);
 		return clientRepository.save(client);
 	}
 	
 	@RequestMapping(value = "/editClient",method=RequestMethod.POST)
-	public Client editClient(Client client){
-		return clientRepository.save(client);
+	public Client editClient(@RequestBody Client client){
+		Client cl= clientRepository.findById(client.getId());
+		cl.setActivated(client.isActivated());
+		cl.setAdresse(client.getAdresse());
+		cl.setCin(client.getCin());
+		cl.setCodePostal(client.getCodePostal());
+		cl.setEmail(client.getEmail());
+		cl.setNom(client.getNom());
+		cl.setPrenom(client.getPrenom());
+		cl.setTelephone(client.getTelephone());
+		return clientRepository.save(cl);
 	}
 
 	@RequestMapping(value = "/getAllClients")
@@ -67,16 +78,16 @@ public class AgentController {
 	public Client activateCompte(int id_client)
 	{
 		System.out.println("--------------------------.....---------- "+id_client);
-		Client client =clientRepository.findById(id_client).get();
+		Client client =clientRepository.findById(id_client);
 		client.setActivated(true);
 		clientRepository.save(client);
 		return client;
 	}
 	
-	@RequestMapping(value="/desacivateCompte")
+	@RequestMapping(value="/desactivateCompte")
 	public Client desactivateCompte(int id_client)
 	{
-		Client client =clientRepository.findById(id_client).get();
+		Client client =clientRepository.findById(id_client);
 		client.setActivated(false);
 		clientRepository.save(client);
 		return client;
@@ -85,8 +96,8 @@ public class AgentController {
 	@RequestMapping(value="/getClient")
 	public Client getClientbyId(int id_client)
 	{
-		Client client =clientRepository.findById(id_client).get();
-		return client;
+		return clientRepository.findById(id_client);
+
 		
 	}
 	
