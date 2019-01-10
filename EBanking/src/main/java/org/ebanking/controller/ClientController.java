@@ -8,15 +8,32 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.ebanking.dao.ClientRepository;
 import org.ebanking.dao.CompteRepository;
 import org.ebanking.dao.DonRepository;
+import org.ebanking.dao.OrganismeRepository;
+import org.ebanking.dao.PaiementServiceRepository;
 import org.ebanking.dao.ReclamationRepository;
+import org.ebanking.dao.SousCategorieServiceRepository;
 import org.ebanking.dao.VirementRepository;
+import org.ebanking.entity.Agent;
+import org.ebanking.entity.Client;
 import org.ebanking.entity.Compte;
 import org.ebanking.entity.Don;
+import org.ebanking.entity.Organisme;
 import org.ebanking.entity.PaiementService;
 import org.ebanking.entity.Reclamation;
+import org.ebanking.entity.SousCategorieService;
 import org.ebanking.entity.Virement;
+import org.ebanking.security.JwtTokenUtil;
+import org.ebanking.security.SecurityConstants;
+import org.ebanking.web.inputs.DonInput;
+import org.ebanking.web.inputs.PaiementServiceInput;
+import org.ebanking.web.inputs.ReclamationInput;
+import org.ebanking.web.inputs.VirementInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +62,26 @@ public class ClientController {
 	
 	@Autowired
 	private DonRepository donRepository;
+	
+	@Autowired
+	private ClientRepository clientRepository;
+	
+	@Autowired
+	private OrganismeRepository organismeRepository;
+	
+	@Autowired
+	private PaiementServiceRepository paiementServiceRepository;
+	
+	@Autowired
+	private SousCategorieServiceRepository categorieServiceRepository;
+	
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil; 
+	
+	@RequestMapping(value = "/all")
+	public List<Client> getAllClients(){
+		return clientRepository.findAll();
+	}
 
 	/**
 	 * -------------Virements---------------
@@ -58,34 +95,30 @@ public class ClientController {
 	 * @return
 	 * @throws ParseException
 	 */
-	@RequestMapping(value = "/virement", method = RequestMethod.GET)
-	public Object[] virement(@RequestParam(value = "ribSource") Long ribSource,
-			@RequestParam(name = "ribDestination") Long ribDestination,
-			@RequestParam(name = "montant") Double montant) throws ParseException {
+	@RequestMapping(value = "/éffectuer-un-virement", method = RequestMethod.POST)
+	public Object[] virement(@RequestBody @Valid VirementInput virement) throws ParseException {
 		
-		Compte compteSource = compteRepository.findByRib(ribSource);
-		Compte compteDestination = compteRepository.findByRib(ribDestination);
-		
-		System.out.println(ribSource + ", " + ribDestination + ", " + montant);
+		Compte compteSource = compteRepository.findByRib(virement.getRibSource());
+		Compte compteDestination = compteRepository.findByRib(virement.getRibDestination());
 		
 		if(compteSource == null || compteDestination == null) {
 			//l'un des rib est eroné
 			return new Object[] {-1, null};
 		}else {
-			if(compteSource.getSold() >= montant) {
-				compteSource.setSold(compteSource.getSold() - montant);
-				compteDestination.setSold(compteDestination.getSold() + montant);
+			if(compteSource.getSold() >= virement.getMontant()) {
+				compteSource.setSold(compteSource.getSold() - virement.getMontant());
+				compteDestination.setSold(compteDestination.getSold() + virement.getMontant());
 				
 				compteRepository.save(compteSource);
 				compteRepository.save(compteDestination);
 				
 				DateFormat df = new SimpleDateFormat(datePattern);
 				Virement v = new Virement(compteSource, compteDestination, 
-						montant, df.parse(df.format(Calendar.getInstance().getTime())));
+						virement.getMontant(), df.parse(df.format(Calendar.getInstance().getTime())));
 				virementRepository.save(v);
 				
 				//transaction effectuée avec success 
-				return new Object[] {1, compteSource};
+				return new Object[] {1, v};
 			}
 			//solde insuffisant
 			return new Object[] {-2, null};
@@ -97,9 +130,12 @@ public class ClientController {
 	 * @param idClient
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/mes-virements")
-	public List<Virement> mesVirements(@PathVariable int idClient){
-		List<Compte> comptes = compteRepository.findByClientId(idClient);
+	@RequestMapping(value = "/mes-virements")
+	public List<Virement> mesVirements(HttpServletRequest request){
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		
+		List<Compte> comptes = compteRepository.findByClientId(client.getId());
 		List<Virement> virements = new ArrayList<>();
 		
 		comptes.forEach(c -> {
@@ -120,9 +156,11 @@ public class ClientController {
 	 * @param idClient
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/mes-comptes")
-	public List<Compte> mesComptes(@PathVariable int idClient){
-		return compteRepository.findByClientId(idClient);
+	@RequestMapping(value = "/mes-comptes")
+	public List<Compte> mesComptes(HttpServletRequest request){
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		return compteRepository.findByClientId(client.getId());
 	}
 	
 	/**
@@ -131,8 +169,8 @@ public class ClientController {
 	 * @param idCompte
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/compte/{rib}")
-	public Compte unCompte(@PathVariable int idClient, @PathVariable int rib) {
+	@RequestMapping(value = "/compte/{rib}")
+	public Compte unCompte(@PathVariable int rib) {
 		return compteRepository.findByRib((long) rib);
 	}
 	
@@ -146,14 +184,26 @@ public class ClientController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(value = "/déposer-une-réclamation", method = RequestMethod.POST)
-	public Object[] deposerReclamation(@RequestBody Reclamation reclamation) throws ParseException {
+	public Object[] deposerReclamation(HttpServletRequest request, @RequestBody @Valid ReclamationInput reclamationInput) throws ParseException {
 		DateFormat df = new SimpleDateFormat(datePattern);
-		// setting the client & the agent
-		// to do
-		reclamation.setDateDepot(df.parse(df.format(Calendar.getInstance().getTime())));
-		reclamationRepository.save(reclamation);
 		
-		return new Object[] {1, reclamation};
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		
+		if(client != null) {
+			Reclamation reclamation = new Reclamation();
+			reclamation.setCorps(reclamationInput.getCorps());
+			reclamation.setClient(client);
+			reclamation.setAgent(client.getAgent());
+			reclamation.setEtat("En cours de traitement");
+			reclamation.setDateDepot(df.parse(df.format(Calendar.getInstance().getTime())));
+			
+			reclamationRepository.save(reclamation);
+			
+			return new Object[] {1, reclamation};
+		}
+		
+		return new Object[] {-1, null};
 	}
 	
 	/**
@@ -161,9 +211,11 @@ public class ClientController {
 	 * @param idClient
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/mes-réclamations")
-	public List<Reclamation> mesReclamations(@PathVariable int idClient){
-		return reclamationRepository.findByClientId(idClient);
+	@RequestMapping(value = "/mes-réclamations")
+	public List<Reclamation> mesReclamations(HttpServletRequest request){
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		return reclamationRepository.findByClientId(client.getId());
 	}
 	
 	/**
@@ -171,17 +223,24 @@ public class ClientController {
 	 */
 	
 	@RequestMapping(value = "/faire-un-don", method = RequestMethod.POST)
-	public Object[] fairUnDon(@RequestBody Don don) {
-		Compte compte = compteRepository.findByRib(don.getCompte().getRib());
+	public Object[] fairUnDon(@RequestBody @Valid DonInput donInput) {
+		Compte compte = compteRepository.findByRib(donInput.getCompte());
+		Organisme organisme = organismeRepository.findById(donInput.getOrganisme());
 		
-		if(compte.getSold() >= don.getMontant()) {
-			compte.setSold(compte.getSold() - don.getMontant());
-			compteRepository.save(compte);
-			
-			donRepository.save(don);
-			
-			return new Object[] {1, don};
+		if(compte != null) {
+			if(compte.getSold() >= donInput.getMontant()) {
+				Don don = new Don(donInput.getMontant(), organisme, compte);
+				compte.setSold(compte.getSold() - donInput.getMontant());
+				
+				donRepository.save(don);
+				compteRepository.save(compte);
+				
+				return new Object[] {1, don};
+			}
+			//solde insuffisant
+			return new Object[] {-2, null};
 		}
+		//compte introuvable
 		return new Object[] {-1, null};
 		
 	}
@@ -191,9 +250,12 @@ public class ClientController {
 	 * @param idClient
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/mes-dons")
-	public List<Don> mesDons(@PathVariable int idClient){
-		List<Compte> comptes = compteRepository.findByClientId(idClient);
+	@RequestMapping(value = "/mes-dons")
+	public List<Don> mesDons(HttpServletRequest request){
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		
+		List<Compte> comptes = compteRepository.findByClientId(client.getId());
 		List<Don> dons = new ArrayList<>();
 		
 		comptes.forEach(c -> {
@@ -209,12 +271,53 @@ public class ClientController {
 	
 	/**
 	 * 
+	 * @param paiementService
+	 * @return
+	 */
+	@RequestMapping("/payer-un-service")
+	public Object[] payerService(@RequestBody PaiementServiceInput paiementServiceInput) {
+		Compte compte = compteRepository.findByRib(paiementServiceInput.getCompte());
+		Organisme organisme = organismeRepository.findById(paiementServiceInput.getOrganisme());
+		SousCategorieService sousCategorieService = categorieServiceRepository.findById(paiementServiceInput.getSousCategorie());
+		
+		Long numeroContrat = ( paiementServiceInput.getNumeroContart() != null ) ? paiementServiceInput.getNumeroContart() : null;
+		Long numeroTelephone = ( paiementServiceInput.getNumeroTelephone() != null ) ? paiementServiceInput.getNumeroTelephone() : null;
+		
+		if(compte != null) {
+			if(compte.getSold() >= paiementServiceInput.getMontant()) {
+				PaiementService paiementService = new PaiementService(
+						numeroContrat, 
+						numeroTelephone,
+						paiementServiceInput.getMontant(),
+						sousCategorieService,
+						compte, 
+						organisme
+					);
+				compte.setSold(compte.getSold() - paiementServiceInput.getMontant());
+				
+				paiementServiceRepository.save(paiementService);
+				compteRepository.save(compte);
+				
+				return new Object[] {1, paiementService};
+			}
+			//solde insuffisant
+			return new Object[] {-2, null};
+		}
+		//compte introuvable
+		return new Object[] {-1, null};
+	}
+	
+	/**
+	 * 
 	 * @param idClient
 	 * @return
 	 */
-	@RequestMapping(value = "/{idClient}/mes-services-payés")
-	public List<PaiementService> mesServicesPayes(@PathVariable int idClient){
-		List<Compte> comptes = compteRepository.findByClientId(idClient);
+	@RequestMapping(value = "/mes-services-payés")
+	public List<PaiementService> mesServicesPayes(HttpServletRequest request){
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		
+		List<Compte> comptes = compteRepository.findByClientId(client.getId());
 		List<PaiementService> paiementServices = new ArrayList<>();
 		
 		comptes.forEach(c -> {
