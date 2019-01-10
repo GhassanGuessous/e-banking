@@ -13,7 +13,4 @@ public class ReclamationInput {
 
     @NotNull(message = "Vous devez saisir le corps de votre réclamation")
     private String corps;
-    
-    @NotNull()
-    private int client;
 }
