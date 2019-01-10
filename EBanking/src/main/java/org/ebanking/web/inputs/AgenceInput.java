@@ -25,4 +25,20 @@ public class AgenceInput {
 
     @NotNull(message = "ADMIN is a required field")
     private Integer admin;
+
+	public String getNom() {
+		return nom;
+	}
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public Integer getVille() {
+		return ville;
+	}
+
+	public Integer getAdmin() {
+		return admin;
+	}
 }

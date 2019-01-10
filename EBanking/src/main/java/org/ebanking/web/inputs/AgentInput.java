@@ -51,4 +51,48 @@ public class AgentInput {
 
     @NotNull(message = "ADMIN is a required field")
     private int admin;
+
+	public String getCin() {
+		return cin;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public String getPrenom() {
+		return prenom;
+	}
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public int getAgence() {
+		return agence;
+	}
+
+	public int getAdmin() {
+		return admin;
+	}
 }
