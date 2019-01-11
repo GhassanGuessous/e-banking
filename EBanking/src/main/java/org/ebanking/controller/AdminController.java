@@ -1,199 +1,199 @@
-//package org.ebanking.controller;
+//PACKAGE ORG.EBANKING.CONTROLLER;
 //
-//import org.ebanking.dao.*;
-//import org.ebanking.entity.Admin;
-//import org.ebanking.entity.Agence;
-//import org.ebanking.entity.Agent;
-//import org.ebanking.entity.Role;
-//import org.ebanking.web.inputs.AgenceInput;
-//import org.ebanking.web.inputs.AgentInput;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.web.bind.annotation.*;
+//IMPORT ORG.EBANKING.DAO.*;
+//IMPORT ORG.EBANKING.ENTITY.ADMIN;
+//IMPORT ORG.EBANKING.ENTITY.AGENCE;
+//IMPORT ORG.EBANKING.ENTITY.AGENT;
+//IMPORT ORG.EBANKING.ENTITY.ROLE;
+//IMPORT ORG.EBANKING.WEB.INPUTS.AGENCEINPUT;
+//IMPORT ORG.EBANKING.WEB.INPUTS.AGENTINPUT;
+//IMPORT ORG.SPRINGFRAMEWORK.BEANS.FACTORY.ANNOTATION.AUTOWIRED;
+//IMPORT ORG.SPRINGFRAMEWORK.SECURITY.CRYPTO.PASSWORD.PASSWORDENCODER;
+//IMPORT ORG.SPRINGFRAMEWORK.WEB.BIND.ANNOTATION.*;
 //
-//import javax.validation.Valid;
-//import java.util.List;
+//IMPORT JAVAX.VALIDATION.VALID;
+//IMPORT JAVA.UTIL.LIST;
 //
-//@RestController()
-//@RequestMapping(value = "/Admin")
-////@Secured(value = {"ROLE_ADMIN"})
-//public class AdminController {
+//@RESTCONTROLLER()
+//@REQUESTMAPPING(VALUE = "/ADMIN")
+////@SECURED(VALUE = {"ROLE_ADMIN"})
+//PUBLIC CLASS ADMINCONTROLLER {
 //
-//    @Autowired
-//    private VilleRepository villeRepository;
-//    @Autowired
-//    private RoleRepository roleRepository;
-//    @Autowired
-//    private AgenceRepository agenceRepository;
-//    @Autowired
-//    private AdminRepository adminRepository;
-//    @Autowired
-//    private AgentRepository agentRepository;
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+//    @AUTOWIRED
+//    PRIVATE VILLEREPOSITORY VILLEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE ROLEREPOSITORY ROLEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE AGENCEREPOSITORY AGENCEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE ADMINREPOSITORY ADMINREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE AGENTREPOSITORY AGENTREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE PASSWORDENCODER PASSWORDENCODER;
 //
 //    /**
 //     *
-//     * @param agentInput
-//     * @return
+//     * @PARAM AGENTINPUT
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/addNewAgent", method = RequestMethod.POST)
-//    public Agent addAgent(@RequestBody @Valid AgentInput agentInput){
-//        try {
-//            return agentRepository.save(new Agent(
-//                    agentInput.getNom(),
-//                    agentInput.getPrenom(),
-//                    agentInput.getAdresse(),
-//                    agentInput.getTelephone(),
-//                    agentInput.getEmail(),
-//                    agentInput.getUsername(),
-//                    passwordEncoder.encode(agentInput.getPassword()),
-//                    agentInput.getCin(),
-//                    agentInput.isActivated(),
-//                    agenceRepository.findAgenceById(agentInput.getAgence()),
-//                    adminRepository.findAdminById(agentInput.getAdmin()),
-//                    roleRepository.findRoleByRole("ROLE_AGENT")
+//    @REQUESTMAPPING(VALUE = "/ADDNEWAGENT", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT ADDAGENT(@REQUESTBODY @VALID AGENTINPUT AGENTINPUT){
+//        TRY {
+//            RETURN AGENTREPOSITORY.SAVE(NEW AGENT(
+//                    AGENTINPUT.GETNOM(),
+//                    AGENTINPUT.GETPRENOM(),
+//                    AGENTINPUT.GETADRESSE(),
+//                    AGENTINPUT.GETTELEPHONE(),
+//                    AGENTINPUT.GETEMAIL(),
+//                    AGENTINPUT.GETUSERNAME(),
+//                    PASSWORDENCODER.ENCODE(AGENTINPUT.GETPASSWORD()),
+//                    AGENTINPUT.GETCIN(),
+//                    AGENTINPUT.ISACTIVATED(),
+//                    AGENCEREPOSITORY.FINDAGENCEBYID(AGENTINPUT.GETAGENCE()),
+//                    ADMINREPOSITORY.FINDADMINBYID(AGENTINPUT.GETADMIN()),
+//                    ROLEREPOSITORY.FINDROLEBYROLE("ROLE_AGENT")
 //            ));
-//        }catch (Exception e) {
-//            throw new RuntimeException("Valeur en double détectée pour les champs EMAIL ou USERNAME !");
+//        }CATCH (EXCEPTION E) {
+//            THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LES CHAMPS EMAIL OU USERNAME !");
 //        }
 //    }
 //
 //    /**
 //     *
-//     * @param id
-//     * @param newAgentInput
-//     * @return
+//     * @PARAM ID
+//     * @PARAM NEWAGENTINPUT
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/updateAgent/{id}", method = RequestMethod.POST)
-//    public Agent updateAgent(@PathVariable int id, @RequestBody @Valid AgentInput newAgentInput){
+//    @REQUESTMAPPING(VALUE = "/UPDATEAGENT/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT UPDATEAGENT(@PATHVARIABLE INT ID, @REQUESTBODY @VALID AGENTINPUT NEWAGENTINPUT){
 //
-//        Agent oldAgent = agentRepository.findAgentById(id);
+//        AGENT OLDAGENT = AGENTREPOSITORY.FINDAGENTBYID(ID);
 //
-//        if (oldAgent != null) {
-//            oldAgent.setNom(newAgentInput.getNom());
-//            oldAgent.setPrenom(newAgentInput.getPrenom());
-//            oldAgent.setAdresse(newAgentInput.getAdresse());
-//            oldAgent.setTelephone(newAgentInput.getTelephone());
-//            oldAgent.setEmail(newAgentInput.getEmail());
-//            oldAgent.setUsername(newAgentInput.getUsername());
-//            oldAgent.setPassword(passwordEncoder.encode(newAgentInput.getPassword()));
-//            oldAgent.setCin(newAgentInput.getCin());
-//            oldAgent.setActivated(newAgentInput.isActivated());
-//            oldAgent.setAgence(agenceRepository.findAgenceById(newAgentInput.getAgence()));
-//            oldAgent.setAdmin(adminRepository.findAdminById(newAgentInput.getAdmin()));
-//            oldAgent.setRole(roleRepository.findRoleByRole("ROLE_AGENT"));
+//        IF (OLDAGENT != NULL) {
+//            OLDAGENT.SETNOM(NEWAGENTINPUT.GETNOM());
+//            OLDAGENT.SETPRENOM(NEWAGENTINPUT.GETPRENOM());
+//            OLDAGENT.SETADRESSE(NEWAGENTINPUT.GETADRESSE());
+//            OLDAGENT.SETTELEPHONE(NEWAGENTINPUT.GETTELEPHONE());
+//            OLDAGENT.SETEMAIL(NEWAGENTINPUT.GETEMAIL());
+//            OLDAGENT.SETUSERNAME(NEWAGENTINPUT.GETUSERNAME());
+//            OLDAGENT.SETPASSWORD(PASSWORDENCODER.ENCODE(NEWAGENTINPUT.GETPASSWORD()));
+//            OLDAGENT.SETCIN(NEWAGENTINPUT.GETCIN());
+//            OLDAGENT.SETACTIVATED(NEWAGENTINPUT.ISACTIVATED());
+//            OLDAGENT.SETAGENCE(AGENCEREPOSITORY.FINDAGENCEBYID(NEWAGENTINPUT.GETAGENCE()));
+//            OLDAGENT.SETADMIN(ADMINREPOSITORY.FINDADMINBYID(NEWAGENTINPUT.GETADMIN()));
+//            OLDAGENT.SETROLE(ROLEREPOSITORY.FINDROLEBYROLE("ROLE_AGENT"));
 //
-//            try {
-//                return agentRepository.save(oldAgent);
-//            }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour les champs EMAIL ou USERNAME !"); }
+//            TRY {
+//                RETURN AGENTREPOSITORY.SAVE(OLDAGENT);
+//            }CATCH (EXCEPTION E) { THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LES CHAMPS EMAIL OU USERNAME !"); }
 //        }
 //
-//        else
-//            throw new RuntimeException("No Agent found with id(" + id + ") !");
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENT FOUND WITH ID(" + ID + ") !");
 //    }
 //
 //    /**
 //     *
-//     * @param id
-//     * @return
+//     * @PARAM ID
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/deleteAgent/{id}", method = RequestMethod.POST)
-//    public Agent deleteAgent(@PathVariable int id){
+//    @REQUESTMAPPING(VALUE = "/DELETEAGENT/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT DELETEAGENT(@PATHVARIABLE INT ID){
 //
-//        Agent agent = agentRepository.findAgentById(id);
+//        AGENT AGENT = AGENTREPOSITORY.FINDAGENTBYID(ID);
 //
-//        if (agent != null)
-//             agentRepository.delete(agent);
-//        else
-//            throw new RuntimeException("No Agent found with id(" + id + ") !");
+//        IF (AGENT != NULL)
+//             AGENTREPOSITORY.DELETE(AGENT);
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENT FOUND WITH ID(" + ID + ") !");
 //
-//        return null;
+//        RETURN NULL;
 //    }
 //
 //
 //    /**
 //     *
-//     * @return
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/getAgents", method = RequestMethod.GET)
-//    public List<Agent> getAllAgents(){
-//        return agentRepository.findAll();
+//    @REQUESTMAPPING(VALUE = "/GETAGENTS", METHOD = REQUESTMETHOD.GET)
+//    PUBLIC LIST<AGENT> GETALLAGENTS(){
+//        RETURN AGENTREPOSITORY.FINDALL();
 //    }
 //
 //
-//    // CRUD Agences ::
+//    // CRUD AGENCES ::
 //
 //    /**
 //     *
-//     * @return
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/getAgences", method = RequestMethod.GET)
-//    public List<Agence> getAllAgences(){
-//        return agenceRepository.findAll();
+//    @REQUESTMAPPING(VALUE = "/GETAGENCES", METHOD = REQUESTMETHOD.GET)
+//    PUBLIC LIST<AGENCE> GETALLAGENCES(){
+//        RETURN AGENCEREPOSITORY.FINDALL();
 //    }
 //
 //    /**
 //     *
-//     * @param agenceInput
-//     * @return
+//     * @PARAM AGENCEINPUT
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/addNewAgence", method = RequestMethod.POST)
-//    public Agence addAgence(@RequestBody @Valid AgenceInput agenceInput){
-//        try{
-//            return agenceRepository.save(new Agence(
-//                    agenceInput.getNom(),
-//                    agenceInput.getAdresse(),
-//                    villeRepository.findVilleById(agenceInput.getVille()),
-//                    adminRepository.findAdminById(agenceInput.getAdmin())
+//    @REQUESTMAPPING(VALUE = "/ADDNEWAGENCE", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENCE ADDAGENCE(@REQUESTBODY @VALID AGENCEINPUT AGENCEINPUT){
+//        TRY{
+//            RETURN AGENCEREPOSITORY.SAVE(NEW AGENCE(
+//                    AGENCEINPUT.GETNOM(),
+//                    AGENCEINPUT.GETADRESSE(),
+//                    VILLEREPOSITORY.FINDVILLEBYID(AGENCEINPUT.GETVILLE()),
+//                    ADMINREPOSITORY.FINDADMINBYID(AGENCEINPUT.GETADMIN())
 //            ));
-//        }catch (Exception e) {
-//            throw new RuntimeException("Valeur en double détectée pour le libelle d'agence (NOM)!");
+//        }CATCH (EXCEPTION E) {
+//            THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LE LIBELLE D'AGENCE (NOM)!");
 //        }
 //    }
 //
 //    /**
 //     *
-//     * @param id
-//     * @param newAgenceInput
-//     * @return
+//     * @PARAM ID
+//     * @PARAM NEWAGENCEINPUT
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/updateAgence/{id}", method = RequestMethod.POST)
-//    public Agence updateAgence(@PathVariable int id, @RequestBody @Valid AgenceInput newAgenceInput){
+//    @REQUESTMAPPING(VALUE = "/UPDATEAGENCE/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENCE UPDATEAGENCE(@PATHVARIABLE INT ID, @REQUESTBODY @VALID AGENCEINPUT NEWAGENCEINPUT){
 //
-//        Agence oldAgence = agenceRepository.findAgenceById(id);
+//        AGENCE OLDAGENCE = AGENCEREPOSITORY.FINDAGENCEBYID(ID);
 //
-//        if (oldAgence != null) {
-//            oldAgence.setNom(newAgenceInput.getNom());
-//            oldAgence.setAdresse(newAgenceInput.getAdresse());
-//            oldAgence.setVille(villeRepository.findVilleById(newAgenceInput.getVille()));
-//            oldAgence.setAdmin(adminRepository.findAdminById(newAgenceInput.getAdmin()));
+//        IF (OLDAGENCE != NULL) {
+//            OLDAGENCE.SETNOM(NEWAGENCEINPUT.GETNOM());
+//            OLDAGENCE.SETADRESSE(NEWAGENCEINPUT.GETADRESSE());
+//            OLDAGENCE.SETVILLE(VILLEREPOSITORY.FINDVILLEBYID(NEWAGENCEINPUT.GETVILLE()));
+//            OLDAGENCE.SETADMIN(ADMINREPOSITORY.FINDADMINBYID(NEWAGENCEINPUT.GETADMIN()));
 //
-//            try{
-//                return agenceRepository.save(oldAgence);
-//            }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle d'agence (NOM)!"); }
+//            TRY{
+//                RETURN AGENCEREPOSITORY.SAVE(OLDAGENCE);
+//            }CATCH (EXCEPTION E) { THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LE LIBELLE D'AGENCE (NOM)!"); }
 //        }
 //
-//        else
-//            throw new RuntimeException("No Agence found with id(" + id + ") !");
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENCE FOUND WITH ID(" + ID + ") !");
 //    }
 //
 //    /**
 //     *
-//     * @param id
-//     * @return
+//     * @PARAM ID
+//     * @RETURN
 //     */
-//    @RequestMapping(value = "/deleteAgence/{id}", method = RequestMethod.POST)
-//    public Agent deleteAgence(@PathVariable int id){
+//    @REQUESTMAPPING(VALUE = "/DELETEAGENCE/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT DELETEAGENCE(@PATHVARIABLE INT ID){
 //
-//        Agence agence = agenceRepository.findAgenceById(id);
+//        AGENCE AGENCE = AGENCEREPOSITORY.FINDAGENCEBYID(ID);
 //
-//        if (agence != null)
-//            agenceRepository.delete(agence);
-//        else
-//            throw new RuntimeException("No Agence found with id(" + id + ") !");
+//        IF (AGENCE != NULL)
+//            AGENCEREPOSITORY.DELETE(AGENCE);
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENCE FOUND WITH ID(" + ID + ") !");
 //
-//        return null;
+//        RETURN NULL;
 //    }
 //
 //

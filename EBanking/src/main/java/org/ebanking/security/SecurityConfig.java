@@ -20,10 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService)
-			.passwordEncoder(passwordEncoder());
+			.passwordEncoder(passwordEncoder);
 	}
 	
 	@Override
@@ -42,9 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 }
