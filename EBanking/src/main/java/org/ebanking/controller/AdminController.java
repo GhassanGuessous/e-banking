@@ -1,22 +1,23 @@
 package org.ebanking.controller;
 
-import org.ebanking.dao.AdminRepository;
-import org.ebanking.dao.AgenceRepository;
-import org.ebanking.dao.AgentRepository;
 import org.ebanking.dto.AddAgentDTO;
 import org.ebanking.dto.AdmintDTO;
 import org.ebanking.dto.AgenceDTO;
 import org.ebanking.dto.AgentDTO;
-
+import org.ebanking.dto.CategorieServiceDTO;
+import org.ebanking.dto.ClientDTO;
+import org.ebanking.dto.SousCategorieDTO;
 import org.ebanking.dao.*;
 
 import org.ebanking.entity.Admin;
 import org.ebanking.entity.Agence;
 import org.ebanking.entity.Agent;
-
+import org.ebanking.entity.CategorieService;
+import org.ebanking.entity.Client;
 import org.springframework.beans.BeanUtils;
 
 import org.ebanking.entity.Role;
+import org.ebanking.entity.SousCategorieService;
 import org.ebanking.entity.Ville;
 import org.ebanking.security.SecurityConstants;
 import org.ebanking.web.inputs.AgenceInput;
@@ -49,7 +50,9 @@ import java.util.Optional;
 @RequestMapping(value = "/Admin")
 //@Secured(value = {"ROLE_ADMIN"})
 public class AdminController {
-
+	
+    @Autowired
+ 	private ClientRepository clientRepository;
     @Autowired
     private VilleRepository villeRepository;
     @Autowired
@@ -64,8 +67,14 @@ public class AdminController {
     private AgenceRepository ageenceRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+ 	private CategorieServiceRepository categorieServiceRepos;
+    @Autowired
+ 	private SousCategorieServiceRepository sousCategorieServiceRepos;
 
-
+    
+   //quelque CRUD dont j'ai eu besoin f FRONT  -- Zakaria Lachguar
+    
     //Test Token Validation
     @GetMapping(value="/tokenTest")
     public String testToken()
@@ -77,6 +86,39 @@ public class AdminController {
     public List<Ville> getAllVilles(){
     		return villeRepository.findAll();
     }
+    
+    @RequestMapping(value = "/getClients", method = RequestMethod.GET)
+	public List<ClientDTO> getAllClients(){
+    	
+	   	List<ClientDTO> dtoClients = new ArrayList<>();
+        List<Client> clients=  clientRepository.findAll();	       
+	   	for(Client client : clients)
+	       {
+	   		ClientDTO clientDTO = new ClientDTO();
+	       	BeanUtils.copyProperties(client,clientDTO);
+	       	clientDTO.setAgent(client.getAgent().getNom());
+	       	System.out.println(client.getLimite());
+	       	System.out.println(clientDTO.getLimite());
+
+	       	dtoClients.add(clientDTO);
+	       	
+	       }
+    	return dtoClients;
+	   }
+    
+    @RequestMapping(value = "/setLimite/{id}/{limite}", method = RequestMethod.POST)
+    public void setClientimite(@PathVariable int id ,@PathVariable double limite ){
+    	
+    	Client client = clientRepository.findById(id);
+    	if(client!=null) {
+    	client.setLimite(limite);
+    	clientRepository.save(client);
+    	}else
+    	{
+            throw new RuntimeException("Client inexsitant !");       
+    	}
+    }
+   
    
     @RequestMapping(value = "/addAdmin")
     public Admin addAdmin(Admin admin){
@@ -97,9 +139,11 @@ public class AdminController {
         }
     	return dtoAdmins;
     }
+    
+    //CRUD AGENT
     /**
      *
-     * @param agentInput
+     * @param agentDTO
      * @return
      */
     @RequestMapping(value = "/addNewAgent", method = RequestMethod.POST)
@@ -124,8 +168,6 @@ public class AdminController {
 
     /**
      *
-     * @param id
-     * @param newAgentInput
      * @return
      */
     
@@ -162,7 +204,11 @@ public class AdminController {
     	return  agentDTO;
     }
     
-
+    /**
+    *
+    * @param AgentDTO
+    * @return
+    */
     @RequestMapping(value = "/updateAgent",method=RequestMethod.POST)
     public Agent UpdateAgent(@RequestBody @Valid AgentDTO agentDTO , BindingResult binres){
        
@@ -199,8 +245,14 @@ public class AdminController {
 
         Agent agent = agentRepository.findAgentById(id);
 
-        if (agent != null)
-             agentRepository.delete(agent);
+        if (agent != null) {
+           try {
+        	   agentRepository.delete(agent);
+           }catch (Exception e) {
+               throw new RuntimeException("Cet Agent a deja des Clients !");
+		}
+            
+        }
         else
             throw new RuntimeException("No Agent found with id(" + id + ") !");
 
@@ -239,7 +291,7 @@ public class AdminController {
 
     /**
      *
-     * @param agenceInput
+     * @param agenceDTO
      * @return
      */
     @RequestMapping(value = "/addNewAgence", method = RequestMethod.POST)
@@ -271,7 +323,7 @@ public class AdminController {
     /**
      *
      * @param id
-     * @param newAgenceInput
+     * @param AgenceDTO
      * @return
      */
     @RequestMapping(value = "/updateAgence", method = RequestMethod.POST)
@@ -300,8 +352,13 @@ public class AdminController {
 
         Agence agence = agenceRepository.findAgenceById(id);
 
-        if (agence != null)
-            agenceRepository.delete(agence);
+        if (agence != null) {
+            try{
+            	agenceRepository.delete(agence);
+            }catch (Exception e) {
+                throw new RuntimeException("Cet Agence a deja des agents !");
+			}
+        }
         else
             throw new RuntimeException("No Agence found with id(" + id + ") !");
 
@@ -310,7 +367,191 @@ public class AdminController {
 
 
 
+   // CRUD CategorieService ::
+   
+   /**
+   *
+   * 
+   * @return
+   */
+   
+   @RequestMapping(value = "/getCategories", method = RequestMethod.GET)
+   public List<CategorieServiceDTO> getAllSCatervices(){
+   	List<CategorieServiceDTO> categorieDtos = new ArrayList<>();
+   	
+   	List<CategorieService>categories=categorieServiceRepos.findAll();
+   	
+   	for(CategorieService categorie : categories)
+   	{
+   		CategorieServiceDTO categorieDto = new CategorieServiceDTO();
+   		BeanUtils.copyProperties(categorie,categorieDto);    
+   		categorieDtos.add(categorieDto);
+   	}
+   	return categorieDtos;
+   }
+   
+
+   /**
+   *
+   * @param CategorieServiceDTO
+   * @return
+   */
+  @RequestMapping(value = "/addNewCategorie", method = RequestMethod.POST)
+  public CategorieService addCategorie(@RequestBody @Valid CategorieServiceDTO categorieDTO){
+      try{
+    
+			CategorieService categorie = new CategorieService();
+			BeanUtils.copyProperties(categorieDTO, categorie);
+			return categorieServiceRepos.save(categorie);
+			
+			            
+      }catch (Exception e) {
+          throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!");
+      }
+  }
+
+
+  /**
+  *
+  * @param CategorieServiceDTO
+  * @return
+  */
+  @RequestMapping(value = "/updateCategorie", method = RequestMethod.POST)
+  public CategorieService updateCategorieService(@RequestBody @Valid CategorieServiceDTO updatedCategorie){
+
+      CategorieService oldCategorie = (categorieServiceRepos.findById(updatedCategorie.getId())).get();
+      
+      BeanUtils.copyProperties(updatedCategorie,oldCategorie);
+          try{
+              return categorieServiceRepos.save(oldCategorie);
+          }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!"); }
+
+      
+  }
+  
+  /**
+  *
+  * @param id
+  * 
+  */
+
+  @RequestMapping(value = "/deleteCategoroe/{id}", method = RequestMethod.POST)
+  public void deleteCat(@PathVariable int id){
+
+      CategorieService categorie = (categorieServiceRepos.findById(id)).get();
+
+      if (categorie != null)
+      {
+   	   try {
+   	    categorieServiceRepos.delete(categorie);
+         }catch(Exception e) {
+       	  throw new RuntimeException("Cette categorie a deja des sous Categorie !");  
+         }
+      
+      }
+      
+      else 
+          throw new RuntimeException("No Agence found with id(" + id + ") !");
+
+      
+  }
+
+  
+
+  // CRUD SousCategorieService ::
+  
+  /**
+  *
+  * 
+  * @return
+  */
+  
+  @RequestMapping(value = "/getSousCategories", method = RequestMethod.GET)
+  public List<SousCategorieDTO> getAllSousCatervices(){
+  	List<SousCategorieDTO> categorieDtos = new ArrayList<>();
+  	
+  	List<SousCategorieService>categories=sousCategorieServiceRepos.findAll();
+  	
+  	for(SousCategorieService categorie : categories)
+  	{
+  		SousCategorieDTO categorieDto = new SousCategorieDTO();
+  		categorieDto.setCategorie(categorie.getCategorie().getDescription());
+  		BeanUtils.copyProperties(categorie,categorieDto);    
+  		categorieDtos.add(categorieDto);
+  	}
+  	return categorieDtos;
+  }
+  
+
+  /**
+  *
+  * @param SousCategorieServiceDTO
+  * @return
+  */
+ @RequestMapping(value = "/addNewSousCategorie", method = RequestMethod.POST)
+ public SousCategorieService addSousCategorie(@RequestBody @Valid SousCategorieDTO categorieDTO){
+     try{
+   
+			SousCategorieService categorie = new SousCategorieService();
+			CategorieService cat = categorieServiceRepos.findByDescription(categorieDTO.getCategorie());
+			BeanUtils.copyProperties(categorieDTO, categorie);
+			categorie.setCategorie(cat);
+			return sousCategorieServiceRepos.save(categorie);
+			
+			            
+     }catch (Exception e) {
+         throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!");
+     }
+ }
+
+
+ /**
+ *
+ * @param SousCategorieServiceDTO
+ * @return
+ */
+ @RequestMapping(value = "/updateSousCategorie", method = RequestMethod.POST)
+ public SousCategorieService updateSousCategorieService(@RequestBody @Valid SousCategorieDTO updatedCategorie){
+
+     SousCategorieService oldCategorie = (sousCategorieServiceRepos.findById(updatedCategorie.getId())).get();
+     CategorieService cat = categorieServiceRepos.findByDescription(updatedCategorie.getCategorie());
+     BeanUtils.copyProperties(updatedCategorie,oldCategorie);
+     oldCategorie.setCategorie(cat);
+         try{
+             return sousCategorieServiceRepos.save(oldCategorie);
+         }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!"); }
+
+     
+ }
+ 
+ /**
+ *
+ * @param id
+ * 
+ */
+
+ @RequestMapping(value = "/deleteSousCategoroe/{id}", method = RequestMethod.POST)
+ public void deleteSousCat(@PathVariable int id){
+
+     SousCategorieService categorie = (sousCategorieServiceRepos.findById(id)).get();
+
+     if (categorie != null)
+     {
+  	   try {
+  	    sousCategorieServiceRepos.delete(categorie);
+        }catch(Exception e) {
+      	  throw new RuntimeException("Cette categorie a deja des sous Categorie !");  
+        }
+     
+     }
+     
+     else 
+         throw new RuntimeException("No SousCategorie found with id(" + id + ") !");
+
+     
+ }
 
 
 
+   
 }
