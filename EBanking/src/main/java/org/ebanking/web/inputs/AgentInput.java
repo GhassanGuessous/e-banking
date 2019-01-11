@@ -51,4 +51,6 @@ public class AgentInput {
 
     @NotNull(message = "ADMIN is a required field")
     private int admin;
+
+	
 }

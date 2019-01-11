@@ -513,7 +513,7 @@ public class AdminController {
  @RequestMapping(value = "/updateSousCategorie", method = RequestMethod.POST)
  public SousCategorieService updateSousCategorieService(@RequestBody @Valid SousCategorieDTO updatedCategorie){
 
-     SousCategorieService oldCategorie = (sousCategorieServiceRepos.findById(updatedCategorie.getId())).get();
+     SousCategorieService oldCategorie = sousCategorieServiceRepos.findById(updatedCategorie.getId());
      CategorieService cat = categorieServiceRepos.findByDescription(updatedCategorie.getCategorie());
      BeanUtils.copyProperties(updatedCategorie,oldCategorie);
      oldCategorie.setCategorie(cat);
@@ -533,7 +533,7 @@ public class AdminController {
  @RequestMapping(value = "/deleteSousCategoroe/{id}", method = RequestMethod.POST)
  public void deleteSousCat(@PathVariable int id){
 
-     SousCategorieService categorie = (sousCategorieServiceRepos.findById(id)).get();
+     SousCategorieService categorie = sousCategorieServiceRepos.findById(id);
 
      if (categorie != null)
      {

@@ -3,6 +3,17 @@ package org.ebanking.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class AgenceDTO {
 
 	
@@ -17,49 +28,5 @@ public class AgenceDTO {
 	private String ville;
 	
 	private String admin;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getNom() {
-		return nom;
-	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-	public String getAdresse() {
-		return adresse;
-	}
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
-	}
-	public String getVille() {
-		return ville;
-	}
-	public void setVille(String ville) {
-		this.ville = ville;
-	}
-	public String getAdmin() {
-		return admin;
-	}
-	public void setAdmin(String admin) {
-		this.admin = admin;
-	}
-	public AgenceDTO(int id, String nom, String adresse, String ville, String admin) {
-		super();
-		this.id = id;
-		this.nom = nom;
-		this.adresse = adresse;
-		this.ville = ville;
-		this.admin = admin;
-	}
-	
-	public AgenceDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
+		
 }

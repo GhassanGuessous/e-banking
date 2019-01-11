@@ -8,6 +8,17 @@ import javax.validation.constraints.Size;
 import org.ebanking.entity.Admin;
 import org.ebanking.entity.Agence;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClientDTO {
 
 	private int id;
@@ -42,116 +53,7 @@ public class ClientDTO {
 	private String agent;
 	private double limite;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getCin() {
-		return cin;
-	}
-
-	public void setCin(String cin) {
-		this.cin = cin;
-	}
-
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public String getPrenom() {
-		return prenom;
-	}
-
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
-
-	public String getAdresse() {
-		return adresse;
-	}
-
-	public void setAdresse(String adresse) {
-		this.adresse = adresse;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public boolean isActivated() {
-		return activated;
-	}
-
-	public void setActivated(boolean activated) {
-		this.activated = activated;
-	}
-
 	
-	
-	public String getAgent() {
-		return agent;
-	}
-
-	public void setAgent(String agent) {
-		this.agent = agent;
-	}
-
-	public double getLimite() {
-		return limite;
-	}
-
-	public void setLimite(double limite) {
-		this.limite = limite;
-	}
-
-	public ClientDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public ClientDTO(int id, String cin, String nom, String prenom, String adresse, String telephone, String email,
-			String username, boolean activated) {
-		super();
-		this.id = id;
-		this.cin = cin;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.adresse = adresse;
-		this.telephone = telephone;
-		this.email = email;
-		this.username = username;
-		this.activated = activated;
-
-	}
-
 	@Override
 	public String toString() {
 		return "AgentDTO [id=" + id + ", cin=" + cin + ", nom=" + nom + ", prenom=" + prenom + ", adresse=" + adresse
