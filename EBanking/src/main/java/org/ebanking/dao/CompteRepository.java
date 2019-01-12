@@ -13,4 +13,12 @@ public interface CompteRepository extends JpaRepository<Compte, Long> {
 	
 	@Query("select c from Compte c where c.client.id = :id")
 	public List<Compte> findByClientId(@Param("id")int id);
+	
+	@Query("select COUNT(c) from Compte c where c.client.id = :id")
+	public int nbrComptes(@Param("id") int id);
+	
+	@Query("select SUM(c.sold) from Compte c where c.client.id = :id")
+	public int soldeSum(@Param("id") int id);
+	
+	
 }

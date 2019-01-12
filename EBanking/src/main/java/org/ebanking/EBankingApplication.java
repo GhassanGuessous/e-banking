@@ -67,7 +67,7 @@ public class EBankingApplication  implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
-//		
+		
 //		//Creation des roles	
 //		Role role = new Role("ROLE_ADMIN");
 //		Role role2 = new Role("ROLE_CLIENT");
@@ -147,7 +147,7 @@ public class EBankingApplication  implements CommandLineRunner{
 //		//ajout agence a le client
 //		client.setAgent(agent);
 //		clientRepository.save(client);
-//		
+		
 	
 				
 	}
