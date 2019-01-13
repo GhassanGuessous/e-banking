@@ -54,11 +54,14 @@ public class AgentController {
 
 	@RequestMapping(value = "/addClient",method=RequestMethod.POST)
 	public Client addClient(@Valid @RequestBody ClientInputByAgent clientInput) throws ParseException{
+		if(clientInput.getPassword().equals(clientInput.getConfirmedPassword())) {
 		Client client=substitute(clientInput);
 		client= clientRepository.save(client);
 		Compte compte = createCompte(client);
 		compteRepository.save(compte);
 		return client;
+		}
+		else return null;
 	}
 	
 	private Client substitute(ClientInputByAgent clientInput) {
@@ -76,7 +79,6 @@ public class AgentController {
 		client.setPassword(encoder.encode(clientInput.getPassword()));
 		client.setRole(roleRepository.findRoleByRole("ROLE_CLIENT"));
 		client.setActivated(true);
-
 		return client;
 	}
 	
