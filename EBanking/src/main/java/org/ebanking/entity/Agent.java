@@ -88,12 +88,9 @@ public class Agent extends UserMapping implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Agent{" +
-				"agence=" + agence +
-				", admin=" + admin +
-				", clients=" + clients +
-				", reclamations=" + reclamations +
-				", comptes=" + comptes +
-				'}';
+		return "Agent:nom"+super. getNom()+"[agence=" + agence + ", admin=" + admin + ", clients=" + clients + ", reclamations="
+				+ reclamations + ", comptes=" + comptes + "]";
 	}
+
+	
 }

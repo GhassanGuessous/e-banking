@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +35,12 @@ import org.ebanking.security.SecurityConstants;
 import org.ebanking.web.inputs.ClientInput;
 import org.ebanking.web.inputs.DonInput;
 import org.ebanking.web.inputs.PaiementServiceInput;
+import org.ebanking.web.inputs.PasswordInput;
 import org.ebanking.web.inputs.ReclamationInput;
 import org.ebanking.web.inputs.VirementInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,6 +86,9 @@ public class ClientController {
 
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	/**
 	 * ---------------Creer un profil/compte----------------
@@ -168,6 +174,42 @@ public class ClientController {
 
 		return rib;
 	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/mon-profil")
+	public Client monProfil(HttpServletRequest request) {
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+		return client;
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param passwordInput
+	 * @return
+	 */
+	@RequestMapping(value = "/modifier-mot-de-passe")
+	public Object[] modifierPassword(HttpServletRequest request, @Valid @RequestBody PasswordInput passwordInput) {
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+
+		if(encoder.matches(passwordInput.getOldPassword(), client.getPassword())) {
+			if(passwordInput.getNewPassword().equals(passwordInput.getConfirmedPassword())) {
+				client.setPassword(encoder.encode(passwordInput.getNewPassword()));
+				clientRepository.save(client);
+				return new Object[] {1, client};
+			}
+			//new pass != confirmed pass
+			return new Object[] {-1, null};
+		}
+		//old pass != client pass
+		return new Object[] {-2, null};
+	}
 
 	/**
 	 * -------------Virements---------------
@@ -217,19 +259,20 @@ public class ClientController {
 	 * @return
 	 */
 	@RequestMapping(value = "/mes-virements")
-	public List<Virement> mesVirements(HttpServletRequest request) {
+	public Object[] mesVirements(HttpServletRequest request) {
 		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
 		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
 
 		List<Compte> comptes = compteRepository.findByClientId(client.getId());
-		List<Virement> virements = new ArrayList<>();
+		List<Virement> virementsEnvoyes = new ArrayList<>();
+		List<Virement> virementsRecus = new ArrayList<>();
 
 		comptes.forEach(c -> {
-			virements.addAll(c.getVirementsEnvoyes());
-			virements.addAll(c.getVirementsRecus());
+			virementsEnvoyes.addAll(c.getVirementsEnvoyes());
+			virementsRecus.addAll(c.getVirementsRecus());
 		});
 
-		return virements;
+		return new Object[] {virementsEnvoyes, virementsRecus};
 	}
 
 	/**
@@ -368,11 +411,8 @@ public class ClientController {
 		SousCategorieService sousCategorieService = categorieServiceRepository
 				.findById(paiementServiceInput.getSousCategorie());
 
-		Long numeroContrat = (paiementServiceInput.getNumeroContart() != null) ? paiementServiceInput.getNumeroContart()
-				: null;
-		Long numeroTelephone = (paiementServiceInput.getNumeroTelephone() != null)
-				? paiementServiceInput.getNumeroTelephone()
-				: null;
+		Long numeroContrat = (paiementServiceInput.getNumeroContrat() != null) ? paiementServiceInput.getNumeroContrat() : null;
+		Long numeroTelephone = (paiementServiceInput.getNumeroTelephone() != null) ? paiementServiceInput.getNumeroTelephone() : null;
 
 		if (compte != null) {
 			if (compte.getSold() >= paiementServiceInput.getMontant()) {
@@ -411,4 +451,46 @@ public class ClientController {
 
 		return paiementServices;
 	}
+	
+	/**
+	 * ------------------Statistiques-------------------
+	 */
+	
+	@RequestMapping(value = "/mes-statistiques")
+	public HashMap<String, Integer> statistiques(HttpServletRequest request) {
+		String jwtToken = request.getHeader(SecurityConstants.HEADER_STRING);
+		Client client = clientRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwtToken));
+	
+		HashMap<String, Integer> stat = new HashMap<>();
+		
+		stat.put("nbrComptes", client.getComptes().size());
+		stat.put("soldeSum", compteRepository.soldeSum(client.getId()));
+		stat.put("nbrVirementsEnvoyes", nbrVirement(client, 1));
+		stat.put("nbrVirementsRecus", nbrVirement(client, 2));
+		
+		return stat;
+	}
+	
+	public int nbrVirement(Client client, int typeVirement) {
+		int nbr = 0;
+		//envoyes
+		if(typeVirement == 1) {
+			for (int i = 0; i < client.getComptes().size(); i++) {
+				nbr += client.getComptes().get(i).getVirementsEnvoyes().size();
+			}
+		}
+		//recus
+		if(typeVirement == 2) {
+			for (int i = 0; i < client.getComptes().size(); i++) {
+				nbr += client.getComptes().get(i).getVirementsRecus().size();
+			}
+		}
+		return nbr;
+	}
+	
+	
+	
+	
+	
+	
 }

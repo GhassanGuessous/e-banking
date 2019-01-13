@@ -32,6 +32,9 @@ public class Client extends UserMapping implements Serializable{
 	@JsonBackReference(value = "clientCompte")
 	private List<Compte> comptes;
 	
+	// limite virement par journée
+	private double limite;
+	
 	public Client() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -74,6 +77,14 @@ public class Client extends UserMapping implements Serializable{
 
 	public void setComptes(List<Compte> comptes) {
 		this.comptes = comptes;
+	}
+
+	public double getLimite() {
+		return limite;
+	}
+
+	public void setLimite(double limite) {
+		this.limite = limite;
 	}
 	
 	

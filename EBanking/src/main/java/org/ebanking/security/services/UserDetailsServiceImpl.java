@@ -26,9 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired
 	private AdminRepository adminRepository;
-	
+
+
 	@Autowired
-	private AgentRepository agentRepository;;
+	private AgentRepository agentRepository;
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,25 +38,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		Client client = clientRepository.findByUsername(username);
 		Admin admin = adminRepository.findByUsername(username);
-		Agent agent=agentRepository.findByUsername(username);
+		Agent agent = agentRepository.findByUsername(username);
 		
 		if(client == null && admin == null && agent==null)
 			throw new UsernameNotFoundException("Bad Credentials " + username);
 		
+
 		if(admin != null) {
 			authorities.add(new SimpleGrantedAuthority(admin.getRole().getRole()));
 			System.out.println("------>Admin Username: " + admin.getUsername() + ", pass: " + admin.getPassword() + ", Auth: " + authorities);
 			return new User(admin.getUsername(), admin.getPassword(), authorities);
-		}
-		else if(agent != null) {
-			authorities.add(new SimpleGrantedAuthority(agent.getRole().getRole()));
-			System.out.println("------>Agent Username: " + agent.getUsername() + ", pass: " + agent.getPassword() + ", Auth: " + authorities);
-			return new User(agent.getUsername(), agent.getPassword(), authorities);
-		}
-		else {
+		}else if(client!= null){
 			authorities.add(new SimpleGrantedAuthority(client.getRole().getRole()));
 			System.out.println("------> Client Username: " + client.getUsername() + ", pass: " + client.getPassword() + ", Auth: " + authorities);
 			return new User(client.getUsername(), client.getPassword(), authorities);
+		}
+		else {
+			authorities.add(new SimpleGrantedAuthority(agent.getRole().getRole()));
+			System.out.println("------>Agent Username: " + agent.getUsername() + ", pass: " + agent.getPassword() + ", Auth: " + authorities);
+			return new User(agent.getUsername(), agent.getPassword(), authorities);
 		}
 	}
 

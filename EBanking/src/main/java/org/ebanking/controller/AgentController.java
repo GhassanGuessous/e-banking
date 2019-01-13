@@ -23,6 +23,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
@@ -115,6 +117,11 @@ public class AgentController {
 		cl.setTelephone(client.getTelephone());
 		return clientRepository.save(cl);
 	}
+	
+	@RequestMapping(value = "/tst",method=RequestMethod.POST)
+	public List<Client> tst(){
+		return clientRepository.findAll();
+	}
 
 	@RequestMapping(value = "/getAllClients")
 	public List<Client> getAllClients(){
@@ -149,7 +156,9 @@ public class AgentController {
 	@RequestMapping(value="/getClient")
 	public Client getClientbyId(int id_client)
 	{
-		return clientRepository.findById(id_client);
+		Client client =clientRepository.findById(id_client);
+		return client;
+		//return clientRepository.findById(id_client);
 
 		
 	}
