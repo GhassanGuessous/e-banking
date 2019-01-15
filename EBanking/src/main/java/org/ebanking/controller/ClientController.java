@@ -106,15 +106,14 @@ public class ClientController {
 			Client client = substitute(clientInput);
 			try {
 				client = clientRepository.save(client);
-
+				
 				Compte compte = createCompte(client);
-				compteRepository.save(compte); 
-
+				compteRepository.save(compte);
+				
 				return new Object[] { "true", client, compte };
 			}catch(Exception e) {
 				return new Object[] {"false", e.getCause().getCause().getLocalizedMessage()};
 			}
-			
 		}
 		// mot de passe non confirmé
 		return new Object[] { "false", "Mot de passe non confirmé" };
