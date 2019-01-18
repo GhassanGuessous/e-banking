@@ -18,8 +18,7 @@ import lombok.Getter;
  */
 @Data
 @Getter
-public class ClientInput implements Serializable {
-
+public class ClientInput  implements Serializable {
 	@NotNull(message = "CIN is a required field")
     @Size(min=6, max=10, message = "CIN cannot be less than 6 and not longer than 10 characters")
     private String cin;
@@ -48,14 +47,14 @@ public class ClientInput implements Serializable {
     @Size(min=5, message = "USERNAME cannot be less than 10 characters")
     private String username;
 
-    @NotNull(message = "CONFIRMED PASSWORD is a required field")
-    @Size(min=8, max=20, message = "PASSWORD cannot be less than 8 and not longer than 20 characters")
-    private String confirmedPassword;
-    
-    @NotNull(message = "PASSWORD is a required field")
-    @Size(min=8, max=20, message = "PASSWORD cannot be less than 8 and not longer than 20 characters")
-    private String password;
 
     @NotNull(message = "CODE POSTAL is a required field")
     private int codePostal;
+	 @NotNull(message = "CONFIRMED PASSWORD is a required field")
+	    @Size(min=8, max=20, message = "PASSWORD cannot be less than 8 and not longer than 20 characters")
+	    private String confirmedPassword;
+	    
+	    @NotNull(message = "PASSWORD is a required field")
+	    @Size(min=8, max=20, message = "PASSWORD cannot be less than 8 and not longer than 20 characters")
+	    private String password;
 }

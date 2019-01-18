@@ -39,14 +39,12 @@ import org.ebanking.web.inputs.PasswordInput;
 import org.ebanking.web.inputs.ReclamationInput;
 import org.ebanking.web.inputs.VirementInput;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
@@ -106,16 +104,19 @@ public class ClientController {
 	public Object[] signUp(@RequestBody @Valid ClientInput clientInput) throws ParseException {
 		if (clientInput.getPassword().equals(clientInput.getConfirmedPassword())) {
 			Client client = substitute(clientInput);
-			client = clientRepository.save(client);
-
-			Compte compte = createCompte(client);
-			compteRepository.save(compte);
-
-			return new Object[] { client, compte };
+			try {
+				client = clientRepository.save(client);
+				
+				Compte compte = createCompte(client);
+				compteRepository.save(compte);
+				
+				return new Object[] { "true", client, compte };
+			}catch(Exception e) {
+				return new Object[] {"false", e.getCause().getCause().getLocalizedMessage()};
+			}
 		}
-		
 		// mot de passe non confirmé
-		return new Object[] { -1, -1 };
+		return new Object[] { "false", "Mot de passe non confirmé" };
 	}
 
 	/**
@@ -204,13 +205,13 @@ public class ClientController {
 			if(passwordInput.getNewPassword().equals(passwordInput.getConfirmedPassword())) {
 				client.setPassword(encoder.encode(passwordInput.getNewPassword()));
 				clientRepository.save(client);
-				return new Object[] {1, client};
+				return new Object[] {"success", client};
 			}
 			//new pass != confirmed pass
-			return new Object[] {-1, null};
+			return new Object[] {"Mot de passe non confirmé"};
 		}
 		//old pass != client pass
-		return new Object[] {-2, null};
+		return new Object[] {"l'ancien mot de passe est éroné"};
 	}
 
 	/**
@@ -233,7 +234,7 @@ public class ClientController {
 
 		if (compteSource == null || compteDestination == null) {
 			// l'un des rib est eroné
-			return new Object[] { -1, null };
+			return new Object[] { "l'un des rib est éroné", null };
 		} else {
 			if (compteSource.getSold() >= virement.getMontant()) {
 				compteSource.setSold(compteSource.getSold() - virement.getMontant());
@@ -248,10 +249,10 @@ public class ClientController {
 				virementRepository.save(v);
 
 				// transaction effectuée avec success
-				return new Object[] { 1, v };
+				return new Object[] { "success", v };
 			}
 			// solde insuffisant
-			return new Object[] { -2, null };
+			return new Object[] { "solde insuffisant", null };
 		}
 	}
 
@@ -332,10 +333,10 @@ public class ClientController {
 
 			reclamationRepository.save(reclamation);
 
-			return new Object[] { 1, reclamation };
+			return new Object[] { "success", reclamation };
 		}
 
-		return new Object[] { -1, null };
+		return new Object[] { "Client inexistant", null };
 	}
 
 	/**
@@ -367,13 +368,13 @@ public class ClientController {
 				donRepository.save(don);
 				compteRepository.save(compte);
 
-				return new Object[] { 1, don };
+				return new Object[] { "success", don };
 			}
 			// solde insuffisant
-			return new Object[] { -2, null };
+			return new Object[] { "solde insuffisant", null };
 		}
 		// compte introuvable
-		return new Object[] { -1, null };
+		return new Object[] { "compte introuvable", null };
 
 	}
 
@@ -425,13 +426,13 @@ public class ClientController {
 				paiementServiceRepository.save(paiementService);
 				compteRepository.save(compte);
 
-				return new Object[] { 1, paiementService };
+				return new Object[] { "success", paiementService };
 			}
 			// solde insuffisant
-			return new Object[] { -2, null };
+			return new Object[] { "solde insuffisant", null };
 		}
 		// compte introuvable
-		return new Object[] { -1, null };
+		return new Object[] { "compte introuvable", null };
 	}
 
 	/**

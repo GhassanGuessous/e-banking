@@ -211,6 +211,7 @@ import org.ebanking.dto.AgentDTO;
 import org.ebanking.dto.CategorieServiceDTO;
 import org.ebanking.dto.ClientDTO;
 import org.ebanking.dto.SousCategorieDTO;
+import org.ebanking.dto.TypeCompteDTO;
 import org.ebanking.dao.*;
 
 import org.ebanking.entity.Admin;
@@ -222,6 +223,7 @@ import org.springframework.beans.BeanUtils;
 
 import org.ebanking.entity.Role;
 import org.ebanking.entity.SousCategorieService;
+import org.ebanking.entity.TypeCompte;
 import org.ebanking.entity.Ville;
 import org.ebanking.security.SecurityConstants;
 import org.ebanking.web.inputs.AgenceInput;
@@ -275,6 +277,8 @@ public class AdminController {
  	private CategorieServiceRepository categorieServiceRepos;
     @Autowired
  	private SousCategorieServiceRepository sousCategorieServiceRepos;
+    @Autowired
+ 	private TypeCompteRepository typeCompteRepository;
 
     
    //quelque CRUD dont j'ai eu besoin f FRONT  -- Zakaria Lachguar
@@ -755,6 +759,95 @@ public class AdminController {
      
  }
 
+
+ 
+ // CRUD TypeCompte ::
+ 
+ /**
+ *
+ * 
+ * @return
+ */
+ 
+ @RequestMapping(value = "/getTypeComptes", method = RequestMethod.GET)
+ public List<TypeCompteDTO> getAlltypeComptes(){
+ 	List<TypeCompteDTO> typeCompteDTOs = new ArrayList<>();
+ 	
+ 	List<TypeCompte>types=typeCompteRepository.findAll();
+ 	
+ 	for(TypeCompte type : types)
+ 	{
+ 		TypeCompteDTO typeDto = new TypeCompteDTO();
+ 		BeanUtils.copyProperties(type,typeDto);    
+ 		typeCompteDTOs.add(typeDto);
+ 	}
+ 	return typeCompteDTOs;
+ }
+ 
+
+ /**
+ *
+ * @param TypeCompte
+ * @return
+ */
+@RequestMapping(value = "/addNewTypeCompte", method = RequestMethod.POST)
+public TypeCompte addTypeCompte(@RequestBody @Valid TypeCompteDTO typeDto){
+    try{
+  
+    		TypeCompte type = new TypeCompte();
+			BeanUtils.copyProperties(typeDto, type);
+			return typeCompteRepository.save(type);
+			
+			            
+    }catch (Exception e) {
+        throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!");
+    }
+}
+
+
+/**
+*
+* @param SousCategorieServiceDTO
+* @return
+*/
+@RequestMapping(value = "/updateTypeCompte", method = RequestMethod.POST)
+public TypeCompte updateTypeCompte(@RequestBody @Valid TypeCompteDTO updatedtypeCompte){
+
+	TypeCompte oldTypeCompte = typeCompteRepository.findById(updatedtypeCompte.getId());
+    BeanUtils.copyProperties(updatedtypeCompte,oldTypeCompte);
+        try{
+            return typeCompteRepository.save(oldTypeCompte);
+        }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle du categorie (description)!"); }
+
+    
+}
+
+/**
+*
+* @param id
+* 
+*/
+
+@RequestMapping(value = "/deleteTypeCompte/{id}", method = RequestMethod.POST)
+public void deletetTypeCompte(@PathVariable int id){
+
+    TypeCompte type = typeCompteRepository.findById(id);
+
+    if (type != null)
+    {
+ 	   try {
+ 		  typeCompteRepository.delete(type);
+       }catch(Exception e) {
+     	  throw new RuntimeException("Ce Type a deja des Comptes !");  
+       }
+    
+    }
+    
+    else 
+        throw new RuntimeException("No TypeCompte found with id(" + id + ") !");
+
+    
+}
 
 
    

@@ -7,6 +7,7 @@ import org.ebanking.dao.CategorieServiceRepository;
 import org.ebanking.dao.ClientRepository;
 import org.ebanking.dao.RoleRepository;
 import org.ebanking.dao.SousCategorieServiceRepository;
+import org.ebanking.dao.TypeCompteRepository;
 import org.ebanking.dao.VilleRepository;
 import org.ebanking.entity.Admin;
 import org.ebanking.entity.Agence;
@@ -15,6 +16,7 @@ import org.ebanking.entity.CategorieService;
 import org.ebanking.entity.Client;
 import org.ebanking.entity.Role;
 import org.ebanking.entity.SousCategorieService;
+import org.ebanking.entity.TypeCompte;
 import org.ebanking.entity.Ville;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -54,6 +56,10 @@ public class EBankingApplication  implements CommandLineRunner{
 	 @Autowired
 	 	private SousCategorieServiceRepository sousCategorieServiceRepos;
 	
+	 @Autowired
+	 	private TypeCompteRepository typeCompteRepos;
+	
+	 
 	public static void main(String[] args) {
 		SpringApplication.run(EBankingApplication.class, args);
 	}
@@ -72,7 +78,7 @@ public class EBankingApplication  implements CommandLineRunner{
 //		
 //		//Creation des users
 //		Admin admin = new Admin("admin1","lachg","bernoussi","0532","bfsgface","admin1",passwordEncod.encode("z"),"BB1",true,null,null,role);
-//		Client client = new Client("client1","lachg2","bernoussi","05321","bfsgface2","client1",passwordEncod.encode("z"),"BB2",true,role,223,null);
+//		Client client = new Client("client1","lachg2","bernoussi","05321","bfsgface2","client1",passwordEncod.encode("z"),"BB2",true,role2,223,null);
 //		client.setLimite(8000);
 //		Admin admin2 = new Admin("admin2","lachg3","bernoussi","05323","bfsgface3","admin2",passwordEncod.encode("z"),"BB3",true,null,null,role);	
 //		Agent agent = new Agent("agent1","lachg4","bernoussi","05324","bfsgface4","agent1",passwordEncod.encode("z"),"BB4",true,null,admin,role3);
@@ -106,6 +112,11 @@ public class EBankingApplication  implements CommandLineRunner{
 //		sousCategorieServiceRepos.save(sousCategorieService3);
 //		sousCategorieServiceRepos.save(sousCategorieService4);
 //		
+//		// save Type Comptes
+//		
+//		typeCompteRepos.save(new TypeCompte("epargne"));
+//		typeCompteRepos.save(new TypeCompte("en ligne"));
+//		
 //		
 //		//save Roles
 //		rolerep.save(role);
@@ -136,7 +147,7 @@ public class EBankingApplication  implements CommandLineRunner{
 //		//ajout agence a le client
 //		client.setAgent(agent);
 //		clientRepository.save(client);
-//		
+		
 	
 				
 	}
