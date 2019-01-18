@@ -15,6 +15,7 @@ import org.ebanking.entity.Agence;
 import org.ebanking.entity.Agent;
 import org.ebanking.entity.CategorieService;
 import org.ebanking.entity.Client;
+import org.ebanking.entity.Organisme;
 import org.springframework.beans.BeanUtils;
 
 import org.ebanking.entity.Role;
@@ -75,6 +76,9 @@ public class AdminController {
  	private SousCategorieServiceRepository sousCategorieServiceRepos;
     @Autowired
  	private TypeCompteRepository typeCompteRepository;
+    @Autowired
+ 	private OrganismeRepository organismeRepository;
+   
 
     
    //quelque CRUD dont j'ai eu besoin f FRONT  -- Zakaria Lachguar
@@ -644,6 +648,75 @@ public void deletetTypeCompte(@PathVariable int id){
 
     
 }
+
+
+
+@RequestMapping(value = "/getOrganisms", method = RequestMethod.GET)
+public List<Organisme> getAllOrganisme(){
+	
+	return  organismeRepository.findAll();
+	
+}
+
+
+/**
+*
+* @param TypeCompte
+* @return
+*/
+@RequestMapping(value = "/addOrganisme", method = RequestMethod.POST)
+public Organisme addOrganisme(@RequestBody Organisme neworganisme){
+   try{
+   		return organismeRepository.save(neworganisme);		            
+   }catch (Exception e) {
+       throw new RuntimeException("Valeur en double détectée pour le libelle du Organisme (nom)!");
+   }
+}
+
+
+/**
+*
+* @param SousCategorieServiceDTO
+* @return
+*/
+@RequestMapping(value = "/updateOrganisme", method = RequestMethod.POST)
+public Organisme updateOrganisme(@RequestBody Organisme updatedOrganisme){
+
+
+       try{
+           return organismeRepository.save(updatedOrganisme);
+       }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle du Organisme (nom)!"); }
+
+   
+}
+
+/**
+*
+* @param id
+* 
+*/
+
+@RequestMapping(value = "/deleteOrganisme/{id}", method = RequestMethod.POST)
+public void deleteOrgnaisme(@PathVariable int id){
+
+	Organisme organisme = organismeRepository.findById(id);
+
+   if (organisme != null)
+   {
+	   try {
+		   organismeRepository.delete(organisme);
+      }catch(Exception e) {
+    	  throw new RuntimeException("Ce Type a deja des Organismes !");  
+      }
+   
+   }
+   
+   else 
+       throw new RuntimeException("No Organismes found with id(" + id + ") !");
+
+   
+}
+
 
 
    

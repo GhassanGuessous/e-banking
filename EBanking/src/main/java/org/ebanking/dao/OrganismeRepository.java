@@ -6,4 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface OrganismeRepository extends JpaRepository<Organisme, Integer> {
 
 	public Organisme findById(int id);
+	public Organisme findByNom(String nom);
+	
+	
 }
+
+
