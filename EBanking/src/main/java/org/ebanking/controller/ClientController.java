@@ -205,13 +205,13 @@ public class ClientController {
 			if(passwordInput.getNewPassword().equals(passwordInput.getConfirmedPassword())) {
 				client.setPassword(encoder.encode(passwordInput.getNewPassword()));
 				clientRepository.save(client);
-				return new Object[] {"success", client};
+				return new Object[] {"true", "success", client};
 			}
 			//new pass != confirmed pass
-			return new Object[] {"Mot de passe non confirmé"};
+			return new Object[] {"false", "Mot de passe non confirmé"};
 		}
 		//old pass != client pass
-		return new Object[] {"l'ancien mot de passe est éroné"};
+		return new Object[] {"false", "l'ancien mot de passe est éroné"};
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class ClientController {
 
 		if (compteSource == null || compteDestination == null) {
 			// l'un des rib est eroné
-			return new Object[] { "l'un des rib est éroné", null };
+			return new Object[] { "false", "l'un des rib est éroné", null };
 		} else {
 			if (compteSource.getSold() >= virement.getMontant()) {
 				compteSource.setSold(compteSource.getSold() - virement.getMontant());
@@ -249,10 +249,10 @@ public class ClientController {
 				virementRepository.save(v);
 
 				// transaction effectuée avec success
-				return new Object[] { "success", v };
+				return new Object[] { "true", "success", v };
 			}
 			// solde insuffisant
-			return new Object[] { "solde insuffisant", null };
+			return new Object[] { "false", "solde insuffisant", null };
 		}
 	}
 
@@ -333,10 +333,10 @@ public class ClientController {
 
 			reclamationRepository.save(reclamation);
 
-			return new Object[] { "success", reclamation };
+			return new Object[] { "true", "success", reclamation };
 		}
 
-		return new Object[] { "Client inexistant", null };
+		return new Object[] { "false", "Client inexistant", null };
 	}
 
 	/**
@@ -368,13 +368,13 @@ public class ClientController {
 				donRepository.save(don);
 				compteRepository.save(compte);
 
-				return new Object[] { "success", don };
+				return new Object[] { "true", "success", don };
 			}
 			// solde insuffisant
-			return new Object[] { "solde insuffisant", null };
+			return new Object[] { "false", "solde insuffisant", null };
 		}
 		// compte introuvable
-		return new Object[] { "compte introuvable", null };
+		return new Object[] { "false", "compte introuvable", null };
 
 	}
 
@@ -426,13 +426,13 @@ public class ClientController {
 				paiementServiceRepository.save(paiementService);
 				compteRepository.save(compte);
 
-				return new Object[] { "success", paiementService };
+				return new Object[] { "true", "success", paiementService };
 			}
 			// solde insuffisant
-			return new Object[] { "solde insuffisant", null };
+			return new Object[] { "false", "solde insuffisant", null };
 		}
 		// compte introuvable
-		return new Object[] { "compte introuvable", null };
+		return new Object[] { "false", "compte introuvable", null };
 	}
 
 	/**
