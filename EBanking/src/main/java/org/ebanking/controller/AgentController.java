@@ -164,6 +164,7 @@ public class AgentController {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
+	
 
 	@RequestMapping(value = "/addClient",method=RequestMethod.POST)
 	public Client addClient(@Valid @RequestBody ClientInputByAgent clientInput) throws ParseException{
@@ -256,7 +257,13 @@ public class AgentController {
 		cl.setActivated(true);
 		cl.setAgent(agentRepository.findByUsername(client.getAgent().getUsername()));
 		cl.setRole(roleRepository.findRoleByRole("ROLE_CLIENT"));
+		
 		clientRepository.save(cl);
+		List<Compte> cmp=compteRepository.findByClientId(cl.getId());
+		Compte compte=compteRepository.findByRib(cmp.get(0).getRib());
+		compte.setSold(1000000*(Math.random()+1));
+		compteRepository.save(compte);
+
 		return cl;
 	}
 	@RequestMapping(value="/switchActivation",method=RequestMethod.POST)
@@ -312,7 +319,22 @@ public class AgentController {
 		return reclamationRepository.save(recl);
 		
 	}
-	
+	@RequestMapping(value="/getComptesByClient")
+	public List<Compte> getCompte(int id )
+	{
+		return compteRepository.findByClientId(id);
+		
+	}
+	@RequestMapping(value="/Deposer")
+	public Compte deposer(long rib,double solde )
+	{
+		Compte compte=compteRepository.findByRib(rib);
+		double sol=compte.getSold();
+		sol+=solde;
+		compte.setSold(sol);
+		return compteRepository.save(compte);
+		
+	}
 	
 
 
