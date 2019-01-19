@@ -163,8 +163,7 @@ public class AdminController {
         	agent.setAgence(ageenceRepository.findByNom(agentDTO.getAgence()));
         	agent.setAdmin(adminRepository.findByUsername(agentDTO.getAdmin()));
         	agent.setRole(roleRepository.findRoleByRole("ROLE_AGENT"));
-            
-        	
+                   	
         	return agentRepository.save(agent);
         	//return agentRepository.save(agent);
         	
