@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
@@ -126,8 +125,9 @@ public class AgentController {
 	}
 
 	@RequestMapping(value = "/getAllClients")
-	public List<Client> getAllClients(){
-		return clientRepository.findAll();
+	public List<Client> getAllClients(String username){
+		Agent agent=agentRepository.findByUsername(username);
+		return clientRepository.findByAgent(agent);
 	}
 	
 	@RequestMapping(value = "/getAllNotActivatedClients")
@@ -145,11 +145,20 @@ public class AgentController {
 		clientRepository.save(cl);
 		return cl;
 	}
-	
-	@RequestMapping(value="/desactivateCompte")
-	public Client desactivateCompte(int id_client)
+	@RequestMapping(value="/switchActivation",method=RequestMethod.POST)
+	public Client switchActivation(@RequestBody Client client)
 	{
-		Client client =clientRepository.findById(id_client);
+		Client cl =clientRepository.findById(client.getId());
+		if(client.isActivated())
+			cl.setActivated(false);
+		else cl.setActivated(true);
+		clientRepository.save(cl);
+		return cl;
+	}
+	@RequestMapping(value="/desactivateCompte",method=RequestMethod.POST)
+	public Client desactivateCompte(@RequestBody Client cl)
+	{
+		Client client =clientRepository.findById(cl.getId());
 		client.setActivated(false);
 		clientRepository.save(client);
 		return client;
@@ -166,20 +175,29 @@ public class AgentController {
 	}
 	
 	@RequestMapping(value="/deleteClient",method=RequestMethod.DELETE)
-	public void deleteClientbyId(int id_client)
+	public void deleteClientbyId(@RequestBody Client client)
 	{
-		clientRepository.deleteById(id_client);
+		Client cl=clientRepository.findById(client.getId());
+		clientRepository.delete(cl);
 		
 	}
 	
 	@RequestMapping(value="/getReclamations",method=RequestMethod.GET)
-	public List<Reclamation> getReclamations(String username)
+	public List<Reclamation> getReclamations()
 	{
-		Agent agent=agentRepository.findByUsername(username);
-		return reclamationRepository.findByAgentId(agent.getId());
+		return reclamationRepository.findByVerifie(false);
 		
 	}
-
+	@RequestMapping(value="/verifyRec",method=RequestMethod.POST)
+	public Reclamation verify(@RequestBody Reclamation rec)
+	{
+		Reclamation recl=reclamationRepository.findById(rec.getId());
+		recl.setAgent(agentRepository.findByUsername(rec.getAgent().getUsername()));
+		recl.setVerifie(true);
+		recl.setEtat("Verifié");
+		return reclamationRepository.save(recl);
+		
+	}
 	
 	
 
