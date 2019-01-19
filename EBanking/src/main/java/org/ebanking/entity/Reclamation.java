@@ -22,6 +22,8 @@ public class Reclamation implements Serializable {
 	private int id;
 	private String corps;
 	private String etat;
+	private boolean verifie;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateDepot;
 	
@@ -93,6 +95,14 @@ public class Reclamation implements Serializable {
 
 	public void setDateDepot(Date dateDepot) {
 		this.dateDepot = dateDepot;
+	}
+
+	public boolean isVerifie() {
+		return verifie;
+	}
+
+	public void setVerifie(boolean verifie) {
+		this.verifie = verifie;
 	}
 	
 	
