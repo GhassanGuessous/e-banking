@@ -5,6 +5,7 @@ import org.ebanking.dao.AgenceRepository;
 import org.ebanking.dao.AgentRepository;
 import org.ebanking.dao.CategorieServiceRepository;
 import org.ebanking.dao.ClientRepository;
+import org.ebanking.dao.OrganismeRepository;
 import org.ebanking.dao.RoleRepository;
 import org.ebanking.dao.SousCategorieServiceRepository;
 import org.ebanking.dao.TypeCompteRepository;
@@ -14,6 +15,7 @@ import org.ebanking.entity.Agence;
 import org.ebanking.entity.Agent;
 import org.ebanking.entity.CategorieService;
 import org.ebanking.entity.Client;
+import org.ebanking.entity.Organisme;
 import org.ebanking.entity.Role;
 import org.ebanking.entity.SousCategorieService;
 import org.ebanking.entity.TypeCompte;
@@ -59,6 +61,9 @@ public class EBankingApplication  implements CommandLineRunner{
 	 @Autowired
 	 	private TypeCompteRepository typeCompteRepos;
 	
+	 @Autowired
+	 	private OrganismeRepository organismeRepository;
+	
 	 
 	public static void main(String[] args) {
 		SpringApplication.run(EBankingApplication.class, args);
@@ -68,7 +73,7 @@ public class EBankingApplication  implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 		
-//		//Creation des roles	
+		//Creation des roles	
 //		Role role = new Role("ROLE_ADMIN");
 //		Role role2 = new Role("ROLE_CLIENT");
 //		Role role3 = new Role("ROLE_AGENT");
@@ -99,8 +104,15 @@ public class EBankingApplication  implements CommandLineRunner{
 //		SousCategorieService sousCategorieService2 = new SousCategorieService("Facture Credit", categorieService);
 //		SousCategorieService sousCategorieService3 = new SousCategorieService("Facture wifi", categorieService);
 //		SousCategorieService sousCategorieService4 = new SousCategorieService("Recharge Telephone", categorieService2);
+//	
+//		// Creation des Organismes
 //		
+//		Organisme organisme = new Organisme("Maroc telecom",(long) 222222);
+//		Organisme organisme2 = new Organisme("Inwi",(long) 222222);
 //		
+//		//save Organisme
+//		organismeRepository.save(organisme);
+//		organismeRepository.save(organisme2);
 //		//save CategorieService
 //		categorieServiceRepos.save(categorieService);
 //		categorieServiceRepos.save(categorieService2);
@@ -147,8 +159,8 @@ public class EBankingApplication  implements CommandLineRunner{
 //		//ajout agence a le client
 //		client.setAgent(agent);
 //		clientRepository.save(client);
-		
-	
+//		
+//	
 				
 	}
 	

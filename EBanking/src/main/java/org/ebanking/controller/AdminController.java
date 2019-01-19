@@ -1,3 +1,207 @@
+
+//PACKAGE ORG.EBANKING.CONTROLLER;
+//
+//IMPORT ORG.EBANKING.DAO.*;
+//IMPORT ORG.EBANKING.ENTITY.ADMIN;
+//IMPORT ORG.EBANKING.ENTITY.AGENCE;
+//IMPORT ORG.EBANKING.ENTITY.AGENT;
+//IMPORT ORG.EBANKING.ENTITY.ROLE;
+//IMPORT ORG.EBANKING.WEB.INPUTS.AGENCEINPUT;
+//IMPORT ORG.EBANKING.WEB.INPUTS.AGENTINPUT;
+//IMPORT ORG.SPRINGFRAMEWORK.BEANS.FACTORY.ANNOTATION.AUTOWIRED;
+//IMPORT ORG.SPRINGFRAMEWORK.SECURITY.CRYPTO.PASSWORD.PASSWORDENCODER;
+//IMPORT ORG.SPRINGFRAMEWORK.WEB.BIND.ANNOTATION.*;
+//
+//IMPORT JAVAX.VALIDATION.VALID;
+//IMPORT JAVA.UTIL.LIST;
+//
+//@RESTCONTROLLER()
+//@REQUESTMAPPING(VALUE = "/ADMIN")
+////@SECURED(VALUE = {"ROLE_ADMIN"})
+//PUBLIC CLASS ADMINCONTROLLER {
+//
+//    @AUTOWIRED
+//    PRIVATE VILLEREPOSITORY VILLEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE ROLEREPOSITORY ROLEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE AGENCEREPOSITORY AGENCEREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE ADMINREPOSITORY ADMINREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE AGENTREPOSITORY AGENTREPOSITORY;
+//    @AUTOWIRED
+//    PRIVATE PASSWORDENCODER PASSWORDENCODER;
+//
+//    /**
+//     *
+//     * @PARAM AGENTINPUT
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/ADDNEWAGENT", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT ADDAGENT(@REQUESTBODY @VALID AGENTINPUT AGENTINPUT){
+//        TRY {
+//            RETURN AGENTREPOSITORY.SAVE(NEW AGENT(
+//                    AGENTINPUT.GETNOM(),
+//                    AGENTINPUT.GETPRENOM(),
+//                    AGENTINPUT.GETADRESSE(),
+//                    AGENTINPUT.GETTELEPHONE(),
+//                    AGENTINPUT.GETEMAIL(),
+//                    AGENTINPUT.GETUSERNAME(),
+//                    PASSWORDENCODER.ENCODE(AGENTINPUT.GETPASSWORD()),
+//                    AGENTINPUT.GETCIN(),
+//                    AGENTINPUT.ISACTIVATED(),
+//                    AGENCEREPOSITORY.FINDAGENCEBYID(AGENTINPUT.GETAGENCE()),
+//                    ADMINREPOSITORY.FINDADMINBYID(AGENTINPUT.GETADMIN()),
+//                    ROLEREPOSITORY.FINDROLEBYROLE("ROLE_AGENT")
+//            ));
+//        }CATCH (EXCEPTION E) {
+//            THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LES CHAMPS EMAIL OU USERNAME !");
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @PARAM ID
+//     * @PARAM NEWAGENTINPUT
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/UPDATEAGENT/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT UPDATEAGENT(@PATHVARIABLE INT ID, @REQUESTBODY @VALID AGENTINPUT NEWAGENTINPUT){
+//
+//        AGENT OLDAGENT = AGENTREPOSITORY.FINDAGENTBYID(ID);
+//
+//        IF (OLDAGENT != NULL) {
+//            OLDAGENT.SETNOM(NEWAGENTINPUT.GETNOM());
+//            OLDAGENT.SETPRENOM(NEWAGENTINPUT.GETPRENOM());
+//            OLDAGENT.SETADRESSE(NEWAGENTINPUT.GETADRESSE());
+//            OLDAGENT.SETTELEPHONE(NEWAGENTINPUT.GETTELEPHONE());
+//            OLDAGENT.SETEMAIL(NEWAGENTINPUT.GETEMAIL());
+//            OLDAGENT.SETUSERNAME(NEWAGENTINPUT.GETUSERNAME());
+//            OLDAGENT.SETPASSWORD(PASSWORDENCODER.ENCODE(NEWAGENTINPUT.GETPASSWORD()));
+//            OLDAGENT.SETCIN(NEWAGENTINPUT.GETCIN());
+//            OLDAGENT.SETACTIVATED(NEWAGENTINPUT.ISACTIVATED());
+//            OLDAGENT.SETAGENCE(AGENCEREPOSITORY.FINDAGENCEBYID(NEWAGENTINPUT.GETAGENCE()));
+//            OLDAGENT.SETADMIN(ADMINREPOSITORY.FINDADMINBYID(NEWAGENTINPUT.GETADMIN()));
+//            OLDAGENT.SETROLE(ROLEREPOSITORY.FINDROLEBYROLE("ROLE_AGENT"));
+//
+//            TRY {
+//                RETURN AGENTREPOSITORY.SAVE(OLDAGENT);
+//            }CATCH (EXCEPTION E) { THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LES CHAMPS EMAIL OU USERNAME !"); }
+//        }
+//
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENT FOUND WITH ID(" + ID + ") !");
+//    }
+//
+//    /**
+//     *
+//     * @PARAM ID
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/DELETEAGENT/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT DELETEAGENT(@PATHVARIABLE INT ID){
+//
+//        AGENT AGENT = AGENTREPOSITORY.FINDAGENTBYID(ID);
+//
+//        IF (AGENT != NULL)
+//             AGENTREPOSITORY.DELETE(AGENT);
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENT FOUND WITH ID(" + ID + ") !");
+//
+//        RETURN NULL;
+//    }
+//
+//
+//    /**
+//     *
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/GETAGENTS", METHOD = REQUESTMETHOD.GET)
+//    PUBLIC LIST<AGENT> GETALLAGENTS(){
+//        RETURN AGENTREPOSITORY.FINDALL();
+//    }
+//
+//
+//    // CRUD AGENCES ::
+//
+//    /**
+//     *
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/GETAGENCES", METHOD = REQUESTMETHOD.GET)
+//    PUBLIC LIST<AGENCE> GETALLAGENCES(){
+//        RETURN AGENCEREPOSITORY.FINDALL();
+//    }
+//
+//    /**
+//     *
+//     * @PARAM AGENCEINPUT
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/ADDNEWAGENCE", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENCE ADDAGENCE(@REQUESTBODY @VALID AGENCEINPUT AGENCEINPUT){
+//        TRY{
+//            RETURN AGENCEREPOSITORY.SAVE(NEW AGENCE(
+//                    AGENCEINPUT.GETNOM(),
+//                    AGENCEINPUT.GETADRESSE(),
+//                    VILLEREPOSITORY.FINDVILLEBYID(AGENCEINPUT.GETVILLE()),
+//                    ADMINREPOSITORY.FINDADMINBYID(AGENCEINPUT.GETADMIN())
+//            ));
+//        }CATCH (EXCEPTION E) {
+//            THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LE LIBELLE D'AGENCE (NOM)!");
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @PARAM ID
+//     * @PARAM NEWAGENCEINPUT
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/UPDATEAGENCE/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENCE UPDATEAGENCE(@PATHVARIABLE INT ID, @REQUESTBODY @VALID AGENCEINPUT NEWAGENCEINPUT){
+//
+//        AGENCE OLDAGENCE = AGENCEREPOSITORY.FINDAGENCEBYID(ID);
+//
+//        IF (OLDAGENCE != NULL) {
+//            OLDAGENCE.SETNOM(NEWAGENCEINPUT.GETNOM());
+//            OLDAGENCE.SETADRESSE(NEWAGENCEINPUT.GETADRESSE());
+//            OLDAGENCE.SETVILLE(VILLEREPOSITORY.FINDVILLEBYID(NEWAGENCEINPUT.GETVILLE()));
+//            OLDAGENCE.SETADMIN(ADMINREPOSITORY.FINDADMINBYID(NEWAGENCEINPUT.GETADMIN()));
+//
+//            TRY{
+//                RETURN AGENCEREPOSITORY.SAVE(OLDAGENCE);
+//            }CATCH (EXCEPTION E) { THROW NEW RUNTIMEEXCEPTION("VALEUR EN DOUBLE DÉTECTÉE POUR LE LIBELLE D'AGENCE (NOM)!"); }
+//        }
+//
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENCE FOUND WITH ID(" + ID + ") !");
+//    }
+//
+//    /**
+//     *
+//     * @PARAM ID
+//     * @RETURN
+//     */
+//    @REQUESTMAPPING(VALUE = "/DELETEAGENCE/{ID}", METHOD = REQUESTMETHOD.POST)
+//    PUBLIC AGENT DELETEAGENCE(@PATHVARIABLE INT ID){
+//
+//        AGENCE AGENCE = AGENCEREPOSITORY.FINDAGENCEBYID(ID);
+//
+//        IF (AGENCE != NULL)
+//            AGENCEREPOSITORY.DELETE(AGENCE);
+//        ELSE
+//            THROW NEW RUNTIMEEXCEPTION("NO AGENCE FOUND WITH ID(" + ID + ") !");
+//
+//        RETURN NULL;
+//    }
+//
+//
+//
+//
+//
+//}
 package org.ebanking.controller;
 
 import org.ebanking.dto.AddAgentDTO;
@@ -15,6 +219,7 @@ import org.ebanking.entity.Agence;
 import org.ebanking.entity.Agent;
 import org.ebanking.entity.CategorieService;
 import org.ebanking.entity.Client;
+import org.ebanking.entity.Organisme;
 import org.springframework.beans.BeanUtils;
 
 import org.ebanking.entity.Role;
@@ -75,6 +280,9 @@ public class AdminController {
  	private SousCategorieServiceRepository sousCategorieServiceRepos;
     @Autowired
  	private TypeCompteRepository typeCompteRepository;
+    @Autowired
+ 	private OrganismeRepository organismeRepository;
+   
 
     
    //quelque CRUD dont j'ai eu besoin f FRONT  -- Zakaria Lachguar
@@ -644,6 +852,75 @@ public void deletetTypeCompte(@PathVariable int id){
 
     
 }
+
+
+
+@RequestMapping(value = "/getOrganisms", method = RequestMethod.GET)
+public List<Organisme> getAllOrganisme(){
+	
+	return  organismeRepository.findAll();
+	
+}
+
+
+/**
+*
+* @param TypeCompte
+* @return
+*/
+@RequestMapping(value = "/addOrganisme", method = RequestMethod.POST)
+public Organisme addOrganisme(@RequestBody Organisme neworganisme){
+   try{
+   		return organismeRepository.save(neworganisme);		            
+   }catch (Exception e) {
+       throw new RuntimeException("Valeur en double détectée pour le libelle du Organisme (nom)!");
+   }
+}
+
+
+/**
+*
+* @param SousCategorieServiceDTO
+* @return
+*/
+@RequestMapping(value = "/updateOrganisme", method = RequestMethod.POST)
+public Organisme updateOrganisme(@RequestBody Organisme updatedOrganisme){
+
+
+       try{
+           return organismeRepository.save(updatedOrganisme);
+       }catch (Exception e) { throw new RuntimeException("Valeur en double détectée pour le libelle du Organisme (nom)!"); }
+
+   
+}
+
+/**
+*
+* @param id
+* 
+*/
+
+@RequestMapping(value = "/deleteOrganisme/{id}", method = RequestMethod.POST)
+public void deleteOrgnaisme(@PathVariable int id){
+
+	Organisme organisme = organismeRepository.findById(id);
+
+   if (organisme != null)
+   {
+	   try {
+		   organismeRepository.delete(organisme);
+      }catch(Exception e) {
+    	  throw new RuntimeException("Ce Type a deja des Organismes !");  
+      }
+   
+   }
+   
+   else 
+       throw new RuntimeException("No Organismes found with id(" + id + ") !");
+
+   
+}
+
 
 
    
